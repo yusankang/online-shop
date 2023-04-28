@@ -1,30 +1,14 @@
 <template>
-  <nav>
-    <router-link to="/">Home</router-link> |
-    <router-link to="/about">About</router-link>
-  </nav>
   <router-view/>
 </template>
 
 <style lang="scss">
-#app {
-  font-family: Avenir, Helvetica, Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-align: center;
-  color: #2c3e50;
-}
+// Custom.scss
+// Option A: Include all of Bootstrap
 
-nav {
-  padding: 30px;
+// Include any default variable overrides here (though functions won't be available)
 
-  a {
-    font-weight: bold;
-    color: #2c3e50;
+@import "./assets/all.scss";
 
-    &.router-link-exact-active {
-      color: #42b983;
-    }
-  }
-}
+// Then add additional custom code here
 </style>
