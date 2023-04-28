@@ -219,7 +219,7 @@ export default {
       const formData = new FormData();
       formData.append('file-to-upload', uploadedFile);
       const url = `${process.env.VUE_APP_API}api/${process.env.VUE_APP_PATH}/admin/upload`;
-      this.$http.post(url, formData, { headers: {} })
+      this.$http.post(url, formData)
         .then((result) => {
           console.log(result.data);
         });
