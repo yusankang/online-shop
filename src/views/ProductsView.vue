@@ -68,6 +68,7 @@ export default {
     ProductModal,
     DeleteModal,
   },
+  inject: ['emitter'],
   methods: {
     getProducts() {
       const api = `${process.env.VUE_APP_API}api/${process.env.VUE_APP_PATH}/admin/products`;
@@ -104,9 +105,22 @@ export default {
       this.$http[httpMethod](api, { data: this.tempProduct })
         .then((response) => {
           this.isLoading = false;
-          console.log(response);
-          productComponent.hideModal();
-          this.getProducts();
+          if (response.data.success) {
+            productComponent.hideModal();
+            this.getProducts();
+            console.log(response.data.success);
+            this.emitter.emit('push-message', {
+              style: 'success',
+              title: '更新成功',
+            });
+          } else {
+            console.log(response.data.message);
+            this.emitter.emit('push-message', {
+              style: 'danger',
+              title: '更新失敗',
+              content: response.data.message.join('、'),
+            });
+          }
         });
     },
     openDeleteModal(item) {
