@@ -34,7 +34,8 @@
                     <div class="btn-group">
                     <button class="btn btn-outline-primary btn-sm"
                     @click="openModal(false, item)">編輯</button>
-                    <button class="btn btn-outline-danger btn-sm">刪除</button>
+                    <button class="btn btn-outline-danger btn-sm"
+                    @click="openDeleteModal(item)">刪除</button>
                     </div>
                 </td>
             </tr>
@@ -43,10 +44,14 @@
     <ProductModal ref="productModal"
     :product="tempProduct"
     @update-product="updateProduct"></ProductModal>
+    <DeleteModal ref="deleteModal"
+    :deleteProduct="tempProduct"
+    @deleteProduct="deleteProduct"></DeleteModal>
 </template>
 
 <script>
 import ProductModal from '../components/ProductModal.vue';
+import DeleteModal from '../components/DeleteModal.vue';
 
 export default {
   data() {
@@ -59,15 +64,16 @@ export default {
   },
   components: {
     ProductModal,
+    DeleteModal,
   },
   methods: {
     getProducts() {
       const api = `${process.env.VUE_APP_API}api/${process.env.VUE_APP_PATH}/admin/products`;
       this.$http.get(api)
-        .then((result) => {
-          if (result.data.success) {
-            this.products = result.data.products;
-            this.pagination = result.data.pagination;
+        .then((response) => {
+          if (response.data.success) {
+            this.products = response.data.products;
+            this.pagination = response.data.pagination;
           }
         });
     },
@@ -91,10 +97,27 @@ export default {
       }
       const productComponent = this.$refs.productModal;
       this.$http[httpMethod](api, { data: this.tempProduct })
-        .then((result) => {
-          console.log(result);
+        .then((response) => {
+          console.log(response);
           productComponent.hideModal();
           this.getProducts();
+        });
+    },
+    openDeleteModal(item) {
+      this.tempProduct = { ...item };
+      const deleteComponent = this.$refs.deleteModal;
+      deleteComponent.showModal();
+    },
+    deleteProduct() {
+      const api = `${process.env.VUE_APP_API}api/${process.env.VUE_APP_PATH}/admin/product/${this.tempProduct.id}`;
+      this.$http.delete(api)
+        .then((response) => {
+          const deleteComponent = this.$refs.deleteModal;
+          deleteComponent.hideModal();
+          if (response.data.success) {
+            this.getProducts();
+            console.log(response.data.message);
+          }
         });
     },
   },
