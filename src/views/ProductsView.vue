@@ -22,10 +22,10 @@
                 <td>{{ item.category }}</td>
                 <td>{{ item.title }}</td>
                 <td class="text-right">
-                    {{ item.origin_price }}
+                    {{ $filters.currency(item.origin_price) }}
                 </td>
                 <td class="text-right">
-                    {{ item.price }}
+                    {{ $filters.currency(item.price) }}
                 </td>
                 <td>
                     <span class="text-success" v-if="item.is_enabled">啟用</span>
@@ -42,6 +42,8 @@
             </tr>
         </tbody>
     </table>
+    <Pagination :pages="pagination"
+    @emit-pages="getProducts"></Pagination>
     <ProductModal ref="productModal"
     :product="tempProduct"
     @update-product="updateProduct"></ProductModal>
@@ -53,6 +55,7 @@
 <script>
 import ProductModal from '../components/ProductModal.vue';
 import DeleteModal from '../components/DeleteModal.vue';
+import Pagination from '../components/PaginationComponent.vue';
 
 export default {
   data() {
@@ -67,16 +70,18 @@ export default {
   components: {
     ProductModal,
     DeleteModal,
+    Pagination,
   },
   inject: ['emitter'],
   methods: {
-    getProducts() {
-      const api = `${process.env.VUE_APP_API}api/${process.env.VUE_APP_PATH}/admin/products`;
+    getProducts(page = 1) {
+      const api = `${process.env.VUE_APP_API}api/${process.env.VUE_APP_PATH}/admin/products/?page=${page}`;
       this.isLoading = true;
       this.$http.get(api)
         .then((response) => {
           this.isLoading = false;
           if (response.data.success) {
+            console.log(response.data);
             this.products = response.data.products;
             this.pagination = response.data.pagination;
           }
