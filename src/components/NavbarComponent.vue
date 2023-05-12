@@ -18,7 +18,13 @@
                     <a class="nav-link active" aria-current="page" href="#">Home</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="#">Features</a>
+                    <a class="nav-link" href="#" @click.prevent="products">Products</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="#" @click.prevent="orders">Orders</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="#" @click.prevent="coupons">Coupons</a>
                 </li>
                 <li class="nav-item">
                     <a class="nav-link" href="#" @click.prevent="logout">Log out</a>
@@ -32,6 +38,15 @@
 <script>
 export default {
   methods: {
+    products() {
+      this.$router.push('./products');
+    },
+    orders() {
+      this.$router.push('./orders');
+    },
+    coupons() {
+      this.$router.push('./coupons');
+    },
     logout() {
       const api = `${process.env.VUE_APP_API}logout`;
       this.$http.post(api, this.user)

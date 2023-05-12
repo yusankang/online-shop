@@ -48,8 +48,8 @@
     :product="tempProduct"
     @update-product="updateProduct"></ProductModal>
     <DeleteModal ref="deleteModal"
-    :deleteProduct="tempProduct"
-    @deleteProduct="deleteProduct"></DeleteModal>
+    :deleteItem="tempProduct"
+    @deleteItem="deleteProduct"></DeleteModal>
 </template>
 
 <script>
@@ -72,7 +72,7 @@ export default {
     DeleteModal,
     Pagination,
   },
-  inject: ['emitter'],
+  inject: ['emitter', 'pushMessageState'],
   methods: {
     getProducts(page = 1) {
       const api = `${process.env.VUE_APP_API}api/${process.env.VUE_APP_PATH}/admin/products/?page=${page}`;
@@ -110,22 +110,10 @@ export default {
       this.$http[httpMethod](api, { data: this.tempProduct })
         .then((response) => {
           this.isLoading = false;
-          if (response.data.success) {
-            productComponent.hideModal();
-            this.getProducts();
-            console.log(response.data.success);
-            this.emitter.emit('push-message', {
-              style: 'success',
-              title: '更新成功',
-            });
-          } else {
-            console.log(response.data.message);
-            this.emitter.emit('push-message', {
-              style: 'danger',
-              title: '更新失敗',
-              content: response.data.message.join('、'),
-            });
-          }
+          console.log(response.data.success);
+          this.pushMessageState(response, '更新');
+          this.getProducts();
+          productComponent.hideModal();
         });
     },
     openDeleteModal(item) {
@@ -139,10 +127,9 @@ export default {
         .then((response) => {
           const deleteComponent = this.$refs.deleteModal;
           deleteComponent.hideModal();
-          if (response.data.success) {
-            this.getProducts();
-            console.log(response.data.message);
-          }
+          console.log(response.data.message);
+          this.pushMessageState(response, '刪除商品');
+          this.getProducts();
         });
     },
   },
