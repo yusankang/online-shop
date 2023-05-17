@@ -22,7 +22,7 @@
         <tbody>
             <tr v-for="item in coupons" :key="item.id">
                 <td>{{ item.title }}</td>
-                <td>{{ item.percent }}</td>
+                <td>{{ item.percent }}%</td>
                 <td>{{ $filters.date(item.due_date) }}</td>
                 <td>
                     <span class="text-success" v-if="item.is_enabled">啟用</span>
@@ -45,14 +45,11 @@
     <DeleteModal ref="deleteModal"
     :deleteItem="tempCoupon"
     @deleteItem="deleteCoupon"></DeleteModal>
-    <Pagination :pages="pagination"
-    @emit-page="getCoupons"></Pagination>
 </template>
 
 <script>
 import DeleteModal from '../components/DeleteModal.vue';
 import CouponModal from '../components/CouponModal.vue';
-import Pagination from '../components/PaginationComponent.vue';
 
 export default {
   data() {
@@ -75,17 +72,10 @@ export default {
         //   code: 'test Code 2',
         // },
       },
-      pagination: {
-        // total_pages: 1,
-        // current_page: 1,
-        // has_pre: false,
-        // has_next: false,
-        // category: null,
-      },
       tempCoupon: {
         title: '',
         is_enabled: 0,
-        percent: 10,
+        percent: 100,
         code: '',
       },
       isNew: false,
@@ -94,51 +84,51 @@ export default {
   },
   components: {
     CouponModal,
-    Pagination,
     DeleteModal,
   },
   inject: ['emitter', 'pushMessageState'],
   methods: {
-    getCoupons(page = 1) {
-      const api = `${process.env.VUE_APP_API}api/${process.env.VUE_APP_PATH}/admin/coupons/?page=${page}`;
+    getCoupons() {
       this.isLoading = true;
-      this.$http.get(api)
+      const api = `${process.env.VUE_APP_API}api/${process.env.VUE_APP_PATH}/admin/coupons`;
+      this.$http.get(api, this.tempProduct)
         .then((response) => {
           this.isLoading = false;
           console.log(response.data);
+          this.coupons = response.data.coupons;
         });
     },
     openCouponModal(isNew, item) {
-      if (isNew) {
+      this.isNew = isNew;
+      if (this.isNew) {
         this.tempCoupon = {
           due_date: new Date().getTime() / 1000,
         };
       } else {
         this.tempCoupon = { ...item };
       }
-      this.isNew = isNew;
       const couponComponent = this.$refs.couponModal;
       couponComponent.showModal();
     },
     updateCoupon(item) {
       this.tempCoupon = item;
-      console.log(this.tempCoupon);
-      let api = `${process.env.VUE_APP_API}api/${process.env.VUE_APP_PATH}admin/coupon`;
-      let httpMethod = 'post';
-      if (!this.isNew) {
-        api = `${process.env.VUE_APP_API}api/${process.env.VUE_APP_PATH}/admin/coupon/${this.item.id}`;
-        httpMethod = 'put';
-      }
-      const couponComponent = this.$refs.couponModal;
-      this.isLoading = true;
-      this.$http[httpMethod](api, { data: this.tempCoupon })
-        .then((response) => {
-          this.isLoading = false;
-          console.log(response.data);
-          // this.pushMessageState(response, '更新');
+      if (this.isNew) {
+        const api = `${process.env.VUE_APP_API}api/${process.env.VUE_APP_PATH}/admin/coupon`;
+        this.$http.post(api, { data: this.tempCoupon }).then((response) => {
+          console.log(response, this.tempCoupon);
+          this.pushMessageState(response, '新增優惠券');
           this.getCoupons();
-          couponComponent.hideModal();
+          this.$refs.couponModal.hideModal();
         });
+      } else {
+        const api = `${process.env.VUE_APP_API}api/${process.env.VUE_APP_PATH}/admin/coupon/${this.tempCoupon.id}`;
+        this.$http.put(api, { data: this.tempCoupon }).then((response) => {
+          console.log(response);
+          this.pushMessageState(response, '更新優惠券');
+          this.getCoupons();
+          this.$refs.couponModal.hideModal();
+        });
+      }
     },
     openDeleteModal(item) {
       this.tempCoupon = { ...item };

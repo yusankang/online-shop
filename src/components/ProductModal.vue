@@ -17,7 +17,7 @@
             <span>新增產品</span>
           </h5>
           <button type="button"
-            class="btn-close text-white"
+            class="btn-close"
             data-bs-dismiss="modal"
             aria-label="Close"
           ></button>
