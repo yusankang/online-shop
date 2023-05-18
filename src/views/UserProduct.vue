@@ -72,7 +72,9 @@ export default {
         product_id: id,
         qty: 1,
       };
+      cart.qty = this.qty;
       this.$http.post(api, { data: cart }).then((response) => {
+        console.log(cart);
         this.status.loadingItem = '';
         pushMessageState(response, '加入購物車');
       });
