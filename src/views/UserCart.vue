@@ -69,7 +69,9 @@
                   <template v-if="cart.carts">
                     <tr v-for="item in cart.carts" :key="item.id">
                       <td style="width: 70px">
-                        <button type="button" class="btn btn-outline-danger btn-sm">
+                        <button type="button"
+                          class="btn btn-outline-danger btn-sm"
+                          @click="openDeleteModal(item)">
                           <i class="bi bi-x-lg"></i>
                         </button>
                       </td>
@@ -97,19 +99,42 @@
                     <td colspan="3" class="text-end">總計</td>
                     <td>{{ $filters.currency(cart.total) }}</td>
                   </tr>
+                  <tr v-if="isUseCoupon">
+                    <td colspan="3" class="text-end text-success">已套用優惠卷</td>
+                    <td class="text-success"> {{ coupon_code }}</td>
+                  </tr>
                   <tr v-if="cart.final_total !== cart.total">
-                    <td colspan="3" class="text-end">折扣價</td>
-                    <td>{{ $filters.currency(cart.final_total) }}</td>
+                    <td colspan="3" class="text-end text-success">折扣價</td>
+                    <td class="text-success">{{ $filters.currency(cart.final_total) }}</td>
                   </tr>
                 </tfoot>
               </table>
+              <div class="input-group mb-3">
+                <input type="text"
+                  class="form-control"
+                  placeholder="輸入優惠碼"
+                  aria-label="Coupon code"
+                  aria-describedby="coupon-button"
+                  v-model="coupon_code">
+                <button class="btn btn-outline-secondary"
+                  type="button"
+                  id="coupon-button"
+                  @click="addCouponCode">套用優惠碼</button>
+              </div>
+              <div class="d-flex justify-content-end">
+                <button class="btn btn-outline-danger"
+                  @click="deleteAll">刪除購物車</button>
+              </div>
             </div>
         </div>
     </div>
+    <DeleteModal ref="deleteModal"
+    :deleteItem="tempItem"
+    @deleteItem="deleteItem"></DeleteModal>
 </template>
 
 <script>
-import pushMessageState from '@/methods/pushMessageState';
+import DeleteModal from '@/components/DeleteModal.vue';
 
 export default {
   data() {
@@ -117,11 +142,18 @@ export default {
       isLoading: false,
       products: [],
       cart: {},
+      tempItem: {},
+      coupon_code: '',
+      isUseCoupon: false,
       status: {
         loadingItem: '',
       },
     };
   },
+  components: {
+    DeleteModal,
+  },
+  inject: ['emitter', 'pushMessageState'],
   methods: {
     getProducts() {
       const api = `${process.env.VUE_APP_API}api/${process.env.VUE_APP_PATH}/products/all`;
@@ -143,8 +175,28 @@ export default {
       };
       this.$http.post(api, { data: cart }).then((response) => {
         this.status.loadingItem = '';
-        pushMessageState(response, '加入購物車');
+        this.pushMessageState(response, '加入購物車');
+        this.getCart();
       });
+    },
+    openDeleteModal(item) {
+      this.tempItem = { ...item };
+      const deleteComponent = this.$refs.deleteModal;
+      deleteComponent.showModal();
+    },
+    deleteItem() {
+      const api = `${process.env.VUE_APP_API}api/${process.env.VUE_APP_PATH}/cart/${this.tempItem.id}`;
+      this.isLoading = true;
+      this.$http.delete(api).then((response) => {
+        this.isLoading = false;
+        const deleteComponent = this.$refs.deleteModal;
+        deleteComponent.hideModal();
+        this.pushMessageState(response, '刪除品項');
+        this.getCart();
+      });
+    },
+    deleteAll() {
+      console.log('deleting all items');
     },
     getCart() {
       const api = `${process.env.VUE_APP_API}api/${process.env.VUE_APP_PATH}/cart`;
@@ -152,7 +204,15 @@ export default {
       this.$http.get(api).then((response) => {
         this.isLoading = false;
         this.cart = (response.data.data);
-        console.log(this.cart);
+        if (this.cart.carts.length >= 1) {
+          if (this.cart.carts[0].coupon) {
+            this.coupon_code = this.cart.carts[0].coupon.code;
+            this.isUseCoupon = true;
+          }
+        } else {
+          this.coupon_code = '';
+          this.isUseCoupon = false;
+        }
       });
     },
     updateCart(item) {
@@ -166,7 +226,20 @@ export default {
       this.$http.put(api, { data: cart }).then((response) => {
         this.isLoading = false;
         this.status.loadingItem = '';
+        this.pushMessageState(response, '購物車更新');
+        this.getCart();
+      });
+    },
+    addCouponCode() {
+      const api = `${process.env.VUE_APP_API}api/${process.env.VUE_APP_PATH}/coupon`;
+      const coupon = {
+        code: this.coupon_code,
+      };
+      this.$http.post(api, { data: coupon }).then((response) => {
         console.log(response);
+        if (response.data.success) {
+          this.isUseCoupon = true;
+        }
         this.getCart();
       });
     },

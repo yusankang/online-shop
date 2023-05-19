@@ -15,6 +15,7 @@
 <script>
 import emitter from '@/methods/emitter';
 import ToastMessages from '@/components/ToastMessages.vue';
+import pushMessageState from '@/methods/pushMessageState';
 
 export default {
   components: {
@@ -23,6 +24,7 @@ export default {
   provide() {
     return {
       emitter,
+      pushMessageState,
     };
   },
   created() {
