@@ -10,7 +10,7 @@
 import emitter from '@/methods/emitter';
 import pushMessageState from '@/methods/pushMessageState';
 import ToastMessages from '../components/ToastMessages.vue';
-import Navbar from '../components/NavbarComponent.vue';
+import Navbar from '../components/DashboardNavbar.vue';
 
 export default {
   components: {
