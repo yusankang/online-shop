@@ -69,70 +69,7 @@ export default {
   data() {
     return {
       tempOrder: {},
-      orders: [
-        {
-          create_at: 1523539834,
-          id: '-L9u2EUkQSoEmW7QzGLF',
-          is_paid: true,
-          message: '這是留言',
-          paid_date: 1523539924,
-          payment_method: 'credit_card',
-          products: {
-            L8nBrq8Ym4ARI1Kog4t: {
-              product: {
-                title: 'Birdy',
-                unit: 'Dog',
-              },
-              id: 'L8nBrq8Ym4ARI1Kog4t',
-              product_id: '-L8moRfPlDZZ2e-1ritQ',
-              qty: 1,
-            },
-            L8nBrq8Ym4ARI1Kog5t: {
-              product: {
-                title: 'Luna',
-                unit: 'Cat',
-              },
-              id: 'L8nBrq8Ym4ARI1Kog5t',
-              product_id: '-L8moRfPlDZZ2e-1catQ',
-              qty: 1,
-            },
-          },
-          total: 24600,
-          user: {
-            address: 'kaohsiung',
-            email: 'test@gmail.com',
-            name: 'test',
-            tel: '0912346768',
-          },
-          num: 1,
-        },
-        {
-          create_at: 1523539519,
-          id: '-L9u11NAE0m0SpSBUDIq',
-          is_paid: false,
-          message: '這是留言',
-          paid_date: 1523539519,
-          payment_method: 'credit_card',
-          products: {
-            L8nBrq8Ym4ARI1Kog4t: {
-              product: {
-                title: 'Crumb',
-                unit: 'Dog',
-              },
-              id: 'L8nBrq8Ym4ARI1Kog4t',
-              product_id: '-L8moRfPlDZZ2e-1ritQ',
-              qty: 1,
-            },
-          },
-          total: 26700,
-          user: {
-            address: 'kaohsiung',
-            email: 'test@gmail.com',
-            name: 'test',
-            tel: '0912346768',
-          },
-          num: 2,
-        }],
+      orders: [],
       pagination: {
         total_pages: 1,
         current_page: 1,
@@ -147,7 +84,6 @@ export default {
     OrderModal,
     DeleteModal,
     Pagination,
-
   },
   inject: ['emitter', 'pushMessageState'],
   methods: {
