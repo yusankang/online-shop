@@ -48,74 +48,26 @@
       </div>
     </div>
   </section>
+  <SwiperSlider></SwiperSlider>
 
-  <section class="mb-5">
-    <div class="horizontal-scroll container-fluid">
-      <h2 class="text-center mb-3">特價熱賣</h2>
-      <div class="scroll-wrapper d-flex flex-row flex-nowrap overflow-auto">
-        <div class="card" style="width: 18rem;">
-          <img src="../assets/images/layout-images/sale-item.jpg" class="card-img-top" alt="...">
-          <div class="card-body">
-            <h5 class="card-title">Card title</h5>
-            <p class="card-text">sale item</p>
-            <a href="#" class="btn btn-primary">Go somewhere</a>
-          </div>
-        </div>
-        <div class="card" style="width: 18rem;">
-          <img src="../assets/images/layout-images/sale-item.jpg" class="card-img-top" alt="...">
-          <div class="card-body">
-            <h5 class="card-title">Card title</h5>
-            <p class="card-text">sale item</p>
-            <a href="#" class="btn btn-primary">Go somewhere</a>
-          </div>
-        </div>
-        <div class="card" style="width: 18rem;">
-          <img src="../assets/images/layout-images/sale-item.jpg" class="card-img-top" alt="...">
-          <div class="card-body">
-            <h5 class="card-title">Card title</h5>
-            <p class="card-text">sale item</p>
-            <a href="#" class="btn btn-primary">Go somewhere</a>
-          </div>
-        </div>
-        <div class="card" style="width: 18rem;">
-          <img src="../assets/images/layout-images/sale-item.jpg" class="card-img-top" alt="...">
-          <div class="card-body">
-            <h5 class="card-title">Card title</h5>
-            <p class="card-text">sale item</p>
-            <a href="#" class="btn btn-primary">Go somewhere</a>
-          </div>
-        </div>
-        <div class="card" style="width: 18rem;">
-          <img src="../assets/images/layout-images/sale-item.jpg" class="card-img-top" alt="...">
-          <div class="card-body">
-            <h5 class="card-title">Card title</h5>
-            <p class="card-text">sale item</p>
-            <a href="#" class="btn btn-primary">Go somewhere</a>
-          </div>
-        </div>
-        <div class="card" style="width: 18rem;">
-          <img src="../assets/images/layout-images/sale-item.jpg" class="card-img-top" alt="...">
-          <div class="card-body">
-            <h5 class="card-title">Card title</h5>
-            <p class="card-text">sale item</p>
-            <a href="#" class="btn btn-primary">Go somewhere</a>
-          </div>
-        </div>
-      </div>
-    </div>
-  </section>
+<footer class="border-top my-5">
+  <h2>This is the footer</h2>
+</footer>
 
 </template>
 
 <script>
 // import Carousel from '@/components/CarouselComponent.vue';
 import Navbar from '../components/UserNavbar.vue';
+import SwiperSlider from '../components/SwiperSlider.vue';
 
 export default {
   name: 'HomePage',
   components: {
     Navbar,
+    SwiperSlider,
   },
+  mixins: [],
   data() {
     return {
       productMenu: [
