@@ -1,80 +1,41 @@
+<!-- eslint-disable vuejs-accessibility/anchor-has-content -->
 <template>
-
-    <swiper
+<section class="container">
+  <swiper-container
+      id="home-swiper"
       :modules="modules"
-      :slides-per-view="3"
-      :space-between="50"
-      navigation
+      :slidesPerView="1"
+      :spaceBetween="10"
+      navigation="true"
       :pagination="{ clickable: true }"
-      :scrollbar="{ draggable: true }"
+      :breakpoints="swiperOptions.breakpoints"
       @swiper="onSwiper"
       @slideChange="onSlideChange">
-        <swiper-slide>
+        <swiper-slide v-for="item in products" :key="item.title"
+          class="mb-5">
           <div class="card" style="width: 18rem;">
-            <img src="../assets/images/product-images/cookware/castiron-pan.jpg"
+            <img :src="item.imageUrl"
               class="card-img-top" alt="">
-            <div class="card-body">
-              <h5 class="card-title">Card title</h5>
-              <a href="#" class="btn btn-primary">Go somewhere</a>
+            <div class="card-body d-flex align-items-center justify-content-between">
+              <div class="ms-2">
+                <h5 class="card-title">{{item.title}}</h5>
+                <p><s>${{$filters.currency(item.origin_price)}}</s>
+                  <span class="text-success fw-bold"> ${{$filters.currency(item.price)}}</span></p>
+              </div>
+              <a href="#" class="me-2">
+                <i class="bi bi-arrow-right text-dark fs-3"></i>
+              </a>
             </div>
           </div>
         </swiper-slide>
-        <swiper-slide>
-          <div class="card" style="width: 18rem;">
-            <img src="../assets/images/product-images/cookware/castiron-pan.jpg"
-              class="card-img-top" alt="">
-            <div class="card-body">
-              <h5 class="card-title">Card title</h5>
-              <a href="#" class="btn btn-primary">Go somewhere</a>
-            </div>
-          </div>
-        </swiper-slide>
-        <swiper-slide>
-          <div class="card" style="width: 18rem;">
-            <img src="../assets/images/product-images/cookware/castiron-pan.jpg"
-              class="card-img-top" alt="">
-            <div class="card-body">
-              <h5 class="card-title">Card title</h5>
-              <a href="#" class="btn btn-primary">Go somewhere</a>
-            </div>
-          </div>
-        </swiper-slide>
-        <swiper-slide>
-          <div class="card" style="width: 18rem;">
-            <img src="../assets/images/product-images/cookware/castiron-pan.jpg"
-              class="card-img-top" alt="">
-            <div class="card-body">
-              <h5 class="card-title">Card title</h5>
-              <a href="#" class="btn btn-primary">Go somewhere</a>
-            </div>
-          </div>
-        </swiper-slide>
-        <swiper-slide>
-          <div class="card" style="width: 18rem;">
-            <img src="../assets/images/product-images/cookware/castiron-pan.jpg"
-              class="card-img-top" alt="">
-            <div class="card-body">
-              <h5 class="card-title">Card title</h5>
-              <a href="#" class="btn btn-primary">Go somewhere</a>
-            </div>
-          </div>
-        </swiper-slide>
-        <swiper-slide>
-          <div class="card" style="width: 18rem;">
-            <img src="../assets/images/product-images/cookware/castiron-pan.jpg"
-              class="card-img-top" alt="">
-            <div class="card-body">
-              <h5 class="card-title">Card title</h5>
-              <a href="#" class="btn btn-primary">Go somewhere</a>
-            </div>
-          </div>
-        </swiper-slide>
-    </swiper>
+    </swiper-container>
+</section>
+
 </template>
 
 <script>
 import {
-  Navigation, Pagination, Scrollbar, A11y,
+  Navigation, Pagination, A11y,
 } from 'swiper';
 import { Swiper, SwiperSlide } from 'swiper/vue';
 
@@ -83,6 +44,7 @@ import 'swiper/swiper-bundle.css';
 
 export default {
   components: {
+    // eslint-disable-next-line vue/no-unused-components
     Swiper,
     SwiperSlide,
   },
@@ -93,41 +55,40 @@ export default {
     const onSlideChange = () => {
       console.log('slide change');
     };
+
     return {
       onSwiper,
       onSlideChange,
-      modules: [Navigation, Pagination, Scrollbar, A11y],
+      modules: [Navigation, Pagination, A11y],
+      swiperOptions: {
+        breakpoints: {
+          640: {
+            slidesPerView: 2,
+            spacebetween: 20,
+          },
+          768: {
+            slidesPerView: 3,
+            spacebetween: 40,
+          },
+        },
+      },
     };
   },
   data() {
     return {
-      products: [
-        {
-          title: 'Castiron Pan',
-          imgUrl: 'product-images/cookware/castiron-pan.jpg',
-        },
-        {
-          title: 'Pink cast iron',
-          imgUrl: 'product-images/cookware/pink-castiron.jpg',
-        },
-        {
-          title: 'Green dish',
-          imgUrl: 'product-images/dishware/green-leaf-dish.jpg',
-        },
-        {
-          title: 'Pink dishes',
-          imgUrl: 'product-images/dishware/pink-dishes.jpg',
-        },
-        {
-          title: 'Pink leaf',
-          imgUrl: 'product-images/dishware/pink-leaf-dish.jpg',
-        },
-        {
-          title: 'Glasses',
-          imgUrl: 'product-images/glassware/gold-rim-wineglasses.jpg',
-        },
-      ],
+      products: [],
     };
+  },
+  methods: {
+    getProducts() {
+      const api = `${process.env.VUE_APP_API}api/${process.env.VUE_APP_PATH}/products/all`;
+      this.$http.get(api).then((response) => {
+        this.products = response.data.products;
+      });
+    },
+  },
+  created() {
+    this.getProducts();
   },
 };
 </script>

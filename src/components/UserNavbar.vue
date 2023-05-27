@@ -1,7 +1,13 @@
 <template>
-    <nav class="navbar navbar-expand-lg bg-transparent fixed-top">
+    <nav class="navbar navbar-expand-lg fixed-top"
+        :class="`${navbar.bgColor}`">
         <div class="container-fluid">
-            <a class="navbar-brand" href="#">野生廚房</a>
+            <a class="navbar-brand" href="#">
+                <h1>
+                    <img src="../assets/images/logos/logo-white.png" alt="野生廚房"
+                        style="height: 80px">
+                </h1>
+            </a>
             <button
             class="navbar-toggler"
             type="button"
@@ -41,7 +47,31 @@
 
 <script>
 export default {
+  data() {
+    return {
+      navbar: {
+        bgColor: 'bg-transparent',
+        opacity: 'opacity-75',
+      },
+      navLinks: {
+        textColor: 'text-white',
+      },
+    };
+  },
   methods: {
+    changeNavBg() {
+      const scrollValue = window.scrollY;
+      console.log(scrollValue);
+      if (scrollValue > 200) {
+        this.bgTransparent = 'bg-white';
+      }
+    },
+  },
+  mounted() {
+    window.addEventListener('scroll', this.changeNavBg);
+  },
+  beforeUnmount() {
+    window.removeEventListener('scroll', this.changeNavBg);
   },
 };
 </script>
