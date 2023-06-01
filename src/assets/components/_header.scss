@@ -1,6 +1,13 @@
-.header-img{
-    height: 600px;
+.homepage-header{
     background-image: url("/src/assets/images/layout-images/homepage-image-crop.jpg");
+}
+
+.products-header{
+    background-image: url("/src/assets/images/layout-images/products-header-marshmallows.jpg");
+}
+
+.header-img{
+    height: 480px;
     background-size: cover;
     background-position: center center;
 }

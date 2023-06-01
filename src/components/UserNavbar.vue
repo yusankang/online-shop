@@ -1,11 +1,12 @@
 <template>
     <nav class="navbar navbar-expand-lg fixed-top"
-        :class="`${navbar.bgColor}`">
+        :class="navbarClass"
+        style="transition: all 1s;">
         <div class="container-fluid">
-            <a class="navbar-brand" href="#">
+            <a class="navbar-brand hvr-grow" href="#">
                 <h1>
-                    <img src="../assets/images/logos/logo-white.png" alt="野生廚房"
-                        style="height: 80px">
+                    <img :src="require(`../assets/images/${logoUrl}`)" alt="野生廚房"
+                        style="height: 50px">
                 </h1>
             </a>
             <button
@@ -21,21 +22,27 @@
             <div class="collapse navbar-collapse" id="navbarNav">
                 <ul class="navbar-nav ms-auto">
                     <li class="nav-item mx-3">
-                        <a class="nav-link text-white fs-6" aria-current="page" href="#">Home</a>
+                        <a class="nav-link fs-6"
+                          aria-current="page" href="#"
+                          :class="navLinksClass">Home</a>
                     </li>
                     <li class="nav-item mx-3">
-                        <a class="nav-link text-white fs-6" href="#">商品列表</a>
+                        <a class="nav-link fs-6" href="#"
+                          :class="navLinksClass">商品列表</a>
                     </li>
                     <li class="nav-item mx-3">
-                        <a class="nav-link text-white fs-6" href="#">野生菜單</a>
+                        <a class="nav-link fs-6" href="#"
+                          :class="navLinksClass">野生菜單</a>
                     </li>
                     <li class="nav-item mx-3">
-                        <button class="nav-link text-white fs-6">
+                        <button class="nav-link fs-6 hvr-bob"
+                          :class="navLinksClass">
                             <i class="bi bi-suit-heart"></i>
                         </button>
                     </li>
                     <li class="nav-item mx-3">
-                        <button class="nav-link text-white fs-6">
+                        <button class="nav-link fs-6 hvr-bob"
+                          :class="navLinksClass">
                             <i class="bi bi-cart3"></i>
                         </button>
                     </li>
@@ -45,25 +52,37 @@
     </nav>
 </template>
 
+<style>
+  .nav-item a { border-bottom: 3px solid transparent }
+  .nav-item a:hover{ border-bottom: 3px solid };
+</style>
+
 <script>
 export default {
   data() {
     return {
-      navbar: {
-        bgColor: 'bg-transparent',
-        opacity: 'opacity-75',
+      logoUrl: 'logos/logo-white.png',
+      navbarClass: {
+        'bg-transparent': true,
+        'bg-white': false,
       },
-      navLinks: {
-        textColor: 'text-white',
+      navLinksClass: {
+        'text-white': true,
+        'text-dark': false,
       },
     };
   },
   methods: {
     changeNavBg() {
       const scrollValue = window.scrollY;
-      console.log(scrollValue);
       if (scrollValue > 200) {
-        this.bgTransparent = 'bg-white';
+        this.logoUrl = 'logos/logo-black.png';
+        this.navbarClass = { 'bg-transparent': false, 'bg-white': true };
+        this.navLinksClass = { 'text-white': false, 'text-dark': true };
+      } else {
+        this.logoUrl = 'logos/logo-white.png';
+        this.navbarClass = { 'bg-transparent': true, 'bg-white': false };
+        this.navLinksClass = { 'text-white': true, 'text-dark': false };
       }
     },
   },

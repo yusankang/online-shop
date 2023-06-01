@@ -1,11 +1,5 @@
-#home-swiper .swiper-button-prev,
-#home-swiper .swiper-button-next {
-  width: 20px;
-  height: 20px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 8px;
-  color: #888888;
-  --swiper-navigation-size: 20px;
+.swiper-slide .card-img-top {
+  width: 100%;
+  height: 25vw;
+  object-fit: cover;
 }

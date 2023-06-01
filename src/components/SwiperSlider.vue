@@ -1,44 +1,52 @@
-<!-- eslint-disable vuejs-accessibility/anchor-has-content -->
 <template>
-<section class="container">
-  <swiper-container
-      id="home-swiper"
-      :modules="modules"
-      :slidesPerView="1"
-      :spaceBetween="10"
-      navigation="true"
-      :pagination="{ clickable: true }"
-      :breakpoints="swiperOptions.breakpoints"
-      @swiper="onSwiper"
-      @slideChange="onSlideChange">
-        <swiper-slide v-for="item in products" :key="item.title"
-          class="mb-5">
-          <div class="card" style="width: 18rem;">
-            <img :src="item.imageUrl"
-              class="card-img-top" alt="">
-            <div class="card-body d-flex align-items-center justify-content-between">
-              <div class="ms-2">
-                <h5 class="card-title">{{item.title}}</h5>
-                <p><s>${{$filters.currency(item.origin_price)}}</s>
-                  <span class="text-success fw-bold"> ${{$filters.currency(item.price)}}</span></p>
-              </div>
-              <a href="#" class="me-2">
-                <i class="bi bi-arrow-right text-dark fs-3"></i>
-              </a>
-            </div>
-          </div>
-        </swiper-slide>
-    </swiper-container>
-</section>
-
+    <div class="swiper-wrapper">
+        <swiper-container
+            :slides-per-view="4"
+            :space-between="30"
+            :modules="modules"
+            :navigation="true"
+            :pagination="pagination"
+            :breakpoints="breakpoints"
+            :grabCursor="true"
+            @swiper="onSwiper"
+            @slideChange="onSlideChange"
+            class="default-slider px-5 pb-5"
+        >
+            <swiper-slide v-for="item in products" :key="item.title"
+                class="swiper-slide">
+                <div class="card h-100 border-0">
+                    <img :src="item.imageUrl" alt="product image"
+                        class="card-img-top" style="min-height: 250px">
+                    <div class="card-body ps-4" style="transform: rotate(0)">
+                        <h5 class="card-title">
+                          <a href="#"
+                            class="stretched-link text-black text-decoration-none">
+                            {{ item.title }}</a>
+                        </h5>
+                        <div class="d-flex justify-content-between align-items-center">
+                          <p class="card-text m-0">
+                            <s>${{$filters.currency(item.origin_price)}}</s>
+                            <span class="text-success fw-bold">
+                                ${{$filters.currency(item.price)}}
+                            </span>
+                          </p>
+                          <i class="bi bi-arrow-right pe-4 fs-4"></i>
+                        </div>
+                    </div>
+                </div>
+            </swiper-slide>
+        </swiper-container>
+    </div>
 </template>
 
 <script>
 import {
   Navigation, Pagination, A11y,
 } from 'swiper';
-import { Swiper, SwiperSlide } from 'swiper/vue';
 
+// Import Swiper Vue.js components
+import { Swiper, SwiperSlide } from 'swiper/vue';
+// Import Swiper styles
 import 'swiper/swiper.css';
 import 'swiper/swiper-bundle.css';
 
@@ -48,6 +56,28 @@ export default {
     Swiper,
     SwiperSlide,
   },
+  data() {
+    return {
+      products: [],
+      pagination: {
+        dynamicBullets: true,
+      },
+      breakpoints: {
+        0: {
+          slidesPerView: 1,
+          spaceBetween: 10,
+        },
+        640: {
+          slidesPerView: 2,
+          spaceBetween: 20,
+        },
+        768: {
+          slidesPerView: 3,
+          spaceBetween: 30,
+        },
+      },
+    };
+  },
   setup() {
     const onSwiper = (swiper) => {
       console.log(swiper);
@@ -55,28 +85,10 @@ export default {
     const onSlideChange = () => {
       console.log('slide change');
     };
-
     return {
       onSwiper,
       onSlideChange,
       modules: [Navigation, Pagination, A11y],
-      swiperOptions: {
-        breakpoints: {
-          640: {
-            slidesPerView: 2,
-            spacebetween: 20,
-          },
-          768: {
-            slidesPerView: 3,
-            spacebetween: 40,
-          },
-        },
-      },
-    };
-  },
-  data() {
-    return {
-      products: [],
     };
   },
   methods: {

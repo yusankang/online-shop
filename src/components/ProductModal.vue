@@ -36,27 +36,54 @@
                 </label>
               </div>
               <div class="mb-3">
-                <label for="customFile" class="form-label">或 上傳圖片
+                <label for="mainImage" class="form-label">上傳主要圖片
                   <i class="fas fa-spinner fa-spin"></i>
                   <input
                     type="file"
-                    id="customFile"
-                    name="filt-to-upload"
+                    id="mainImage"
+                    name="file-to-upload"
                     class="form-control"
-                    ref="fileInput"
-                    @change="uploadFile">
+                    ref="mainImageFileInput"
+                    @change="uploadFile('main')">
                 </label>
               </div>
-              <img class="img-fluid"
+                <img class="mb-3 img-thumbnail"
+                v-if="tempProduct.iamgeUrl"
+                style="max-height: 120px; max-width: 120px; object-fit: cover;"
                 :src="tempProduct.imageUrl"
-                alt=""/>
+                alt="product image"/>
+
               <!-- 延伸技巧，多圖 -->
+
+              <div class="mb-3">
+                <label for="secondaryImages" class="form-label">上傳次要圖片（限2張）
+                  <i class="fas fa-spinner fa-spin"></i>
+                  <input
+                    type="file"
+                    id="secondaryImages"
+                    name="file-to-upload"
+                    class="form-control"
+                    ref="secondaryImagesFileInput"
+                    @change="uploadFile('secondary')">
+                </label>
+              </div>
+              <div class="d-flex flex-wrap"
+                v-if="secondaryImages">
+                <div v-for="(item, key) in tempProduct.imagesUrl" :key="key">
+                  <img class="me-2 mb-3 img-thumbnail"
+                    style="max-height: 120px; max-width: 120px; object-fit: cover;"
+                    :src="item"
+                    alt="product image"/>
+                </div>
+              </div>
+
               <div class="mt-5">
                 <div class="mb-3 input-group" >
                   <input
                     type="url"
                     class="form-control form-control"
                     placeholder="請輸入連結"
+                    v-model="tempImagesUrl"
                   />
                   <button type="button" class="btn btn-outline-danger">
                     移除
@@ -201,6 +228,9 @@ export default {
   watch: {
     product() {
       this.tempProduct = this.product;
+      if (!this.tempProduct.imagesUrl) {
+        this.tempProduct.imagesUrl = [];
+      }
     },
   },
   mixins: [modalMixin],
@@ -208,22 +238,44 @@ export default {
     return {
       modal: {},
       tempProduct: {},
+      secondaryImages: false,
     };
   },
   methods: {
-    uploadFile() {
-      const uploadedFile = this.$refs.fileInput.files[0];
+    uploadFile(type) {
+      const uploadedFile = type === 'main' ? this.$refs.mainImageFileInput.files[0] : this.$refs.secondaryImagesFileInput.files[0];
       const formData = new FormData();
       formData.append('file-to-upload', uploadedFile);
       const api = `${process.env.VUE_APP_API}api/${process.env.VUE_APP_PATH}/admin/upload`;
-      this.$http.post(api, formData)
-        .then((response) => {
-          console.log(response.data);
-          if (response.data.success) {
+      this.$http.post(api, formData).then((response) => {
+        if (response.data.success) {
+          if (type === 'main') {
             this.tempProduct.imageUrl = response.data.imageUrl;
+          } else if (type === 'secondary') {
+            this.secondaryImages = true;
+            const secondaryImage = response.data.imageUrl;
+            this.tempProduct.imagesUrl.push(secondaryImage);
+            if (this.tempProduct.imagesUrl.length > 2) {
+              this.tempProduct.imagesUrl.shift();
+            }
           }
-        });
+        }
+      });
     },
+
+    // uploadFile() {
+    //   const uploadedFile = this.$refs.fileInput.files[0];
+    //   const formData = new FormData();
+    //   formData.append('file-to-upload', uploadedFile);
+    //   const api = `${process.env.VUE_APP_API}api/${process.env.VUE_APP_PATH}/admin/upload`;
+    //   this.$http.post(api, formData)
+    //     .then((response) => {
+    //       console.log(response.data);
+    //       if (response.data.success) {
+    //         this.tempProduct.imageUrl = response.data.imageUrl;
+    //       }
+    //     });
+    // },
   },
 };
 </script>

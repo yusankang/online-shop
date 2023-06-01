@@ -1,7 +1,7 @@
 <!-- eslint-disable vuejs-accessibility/anchor-has-content -->
 <template>
 <Navbar></Navbar>
-  <header class="header-img d-flex align-items-center justify-content-center">
+  <header class="homepage-header header-img d-flex align-items-center justify-content-center">
     <div>
       <h2 class="text-white text-center display-3 permanent-marker">Wilderness kitchen</h2>
       <div class="d-grid gap-2 col-5 mx-auto my-3">
@@ -30,18 +30,19 @@
           alias praesentium saepe vel? Et.</p>
       </div>
 
+<!-- product menu -->
       <div class="row my-4 g-0">
         <div class="col-12 col-md-6 product-menu"
           v-for="item in productMenu" :key="item.title">
           <a href="#">
             <div class="menu-item">
-              <div class="menu-img bg-mask-50">
+              <div class="menu-img">
                 <img :src="require(`../assets/images/${item.imgUrl}`)"
                 class="img-fluid" alt=""/>
                 <span class="color-overlay"
                   :style="`background-color: ${item.backgroundColor}`"></span>
               </div>
-              <div class="menu-text d-flex align-items-center">
+              <div class="menu-text d-flex align-items-center hvr-forward">
                 <h5 class="m-0 fs-4">{{item.title}}</h5>
                 <h5 class="m-0 fs-3 ms-2 permanent-marker">{{item.titleEng}}</h5>
                   <i class="bi bi-arrow-right-short fs-2 mt-2 ms-2"></i>
@@ -51,11 +52,13 @@
         </div>
       </div>
     </section>
+    <h2 class="text-white mb-4 text-center">特價熱賣</h2>
     <SwiperSlider></SwiperSlider>
+    <div class="d-flex justify-content-end">
+      <button class="btn btn-outline-light btn-sm me-5">看更多</button>
+    </div>
 
-    <footer class="border-top py-5">
-      <h2>This is the footer</h2>
-    </footer>
+    <Footer></Footer>
   </div>
 
 </template>
@@ -64,12 +67,14 @@
 // import Carousel from '@/components/CarouselComponent.vue';
 import Navbar from '../components/UserNavbar.vue';
 import SwiperSlider from '../components/SwiperSlider.vue';
+import Footer from '../components/UserFooter.vue';
 
 export default {
   name: 'HomePage',
   components: {
     Navbar,
     SwiperSlider,
+    Footer,
   },
   mixins: [],
   data() {

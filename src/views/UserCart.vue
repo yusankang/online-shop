@@ -3,7 +3,7 @@
 <LoadingOverlay :active="isLoading"></LoadingOverlay>
     <div class="container">
         <div class="row mt-4">
-            <div class="col-md-7">
+            <!-- <div class="col-md-7">
                 <table class="table align-middle">
                     <thead>
                         <tr>
@@ -54,7 +54,8 @@
                         </tr>
                     </tbody>
                 </table>
-            </div>
+            </div> -->
+
             <!-- items in cart -->
             <div class="col-md-5">
               <table class="table">
@@ -128,6 +129,8 @@
               </div>
             </div>
         </div>
+
+        <!-- order form -->
         <Form class="row justify-content-center my-5"
           v-slot="{ errors }"
           @submit="createOrder">
