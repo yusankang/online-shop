@@ -48,13 +48,12 @@
                 </label>
               </div>
                 <img class="mb-3 img-thumbnail"
-                v-if="tempProduct.iamgeUrl"
+                v-if="tempProduct.imageUrl"
                 style="max-height: 120px; max-width: 120px; object-fit: cover;"
                 :src="tempProduct.imageUrl"
                 alt="product image"/>
 
-              <!-- 延伸技巧，多圖 -->
-
+              <!-- secondary images -->
               <div class="mb-3">
                 <label for="secondaryImages" class="form-label">上傳次要圖片（限2張）
                   <i class="fas fa-spinner fa-spin"></i>

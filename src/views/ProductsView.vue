@@ -84,6 +84,7 @@ export default {
             console.log(response.data);
             this.products = response.data.products;
             this.pagination = response.data.pagination;
+            console.log(this.products);
           }
         });
     },
@@ -110,7 +111,6 @@ export default {
       this.$http[httpMethod](api, { data: this.tempProduct })
         .then((response) => {
           this.isLoading = false;
-          console.log(response.data.success);
           this.pushMessageState(response, '更新');
           this.getProducts();
           productComponent.hideModal();

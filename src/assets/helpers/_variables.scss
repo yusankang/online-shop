@@ -1291,25 +1291,25 @@ $pagination-padding-x-lg:           1.5rem !default;
 
 $pagination-font-size:              $font-size-base !default;
 
-$pagination-color:                  var(--#{$prefix}link-color) !default;
+$pagination-color:                  orange;//var(--#{$prefix}link-color) !default; custom
 $pagination-bg:                     var(--#{$prefix}body-bg) !default;
 $pagination-border-radius:          var(--#{$prefix}border-radius) !default;
 $pagination-border-width:           var(--#{$prefix}border-width) !default;
 $pagination-margin-start:           calc(#{$pagination-border-width} * -1) !default; // stylelint-disable-line function-disallowed-list
-$pagination-border-color:           var(--#{$prefix}border-color) !default;
+$pagination-border-color:           orange;//var(--#{$prefix}border-color) !default;custom
 
-$pagination-focus-color:            var(--#{$prefix}link-hover-color) !default;
+$pagination-focus-color:            orange;//var(--#{$prefix}link-hover-color) !default; custom
 $pagination-focus-bg:               var(--#{$prefix}secondary-bg) !default;
 $pagination-focus-box-shadow:       $focus-ring-box-shadow !default;
 $pagination-focus-outline:          0 !default;
 
-$pagination-hover-color:            var(--#{$prefix}link-hover-color) !default;
+$pagination-hover-color:            black;//var(--#{$prefix}link-hover-color) !default; custom
 $pagination-hover-bg:               var(--#{$prefix}tertiary-bg) !default;
-$pagination-hover-border-color:     var(--#{$prefix}border-color) !default; // Todo in v6: remove this?
+$pagination-hover-border-color:     orange;//var(--#{$prefix}border-color) !default; // Todo in v6: remove this? custom
 
 $pagination-active-color:           $component-active-color !default;
-$pagination-active-bg:              $component-active-bg !default;
-$pagination-active-border-color:    $component-active-bg !default;
+$pagination-active-bg:              orange;//$component-active-bg !default; custom
+$pagination-active-border-color:    orange;//$component-active-bg !default; custom
 
 $pagination-disabled-color:         var(--#{$prefix}secondary-color) !default;
 $pagination-disabled-bg:            var(--#{$prefix}secondary-bg) !default;
@@ -1588,8 +1588,8 @@ $list-group-item-color-scale:       40% !default; // Deprecated in v5.3.0
 
 $list-group-hover-bg:               var(--#{$prefix}tertiary-bg) !default;
 $list-group-active-color:           $component-active-color !default;
-$list-group-active-bg:              $component-active-bg !default;
-$list-group-active-border-color:    $list-group-active-bg !default;
+$list-group-active-bg:              orange;//$component-active-bg !default; custom
+$list-group-active-border-color:    orange;//$list-group-active-bg !default; custom
 
 $list-group-disabled-color:         var(--#{$prefix}secondary-color) !default;
 $list-group-disabled-bg:            $list-group-bg !default;

@@ -12,7 +12,7 @@
                 <h2 class="mb-3">{{product.title}}</h2>
                 <div class="mb-3">{{product.description}}</div>
                 <div class="mb-3">{{product.content}}</div>
-                <img :src="product.imageUrl" alt=""
+                <img :src="product.imageUrl" alt="product image"
                 class="image-fluid"
                 style="height: 500px">
             </article>
@@ -63,6 +63,7 @@ export default {
       this.$http.get(api).then((response) => {
         this.isLoading = false;
         this.product = response.data.product;
+        console.log(this.product);
       });
     },
     addCart(id) {
