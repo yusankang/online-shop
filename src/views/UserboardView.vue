@@ -1,5 +1,6 @@
 <template>
-    <div class="position-relative">
+    <div class="position-relative"
+      style="background-color: rgba(42,62,51,.8)">
       <ToastMessages></ToastMessages>
       <router-view/>
     </div>

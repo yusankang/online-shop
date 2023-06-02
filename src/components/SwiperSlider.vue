@@ -1,3 +1,4 @@
+<!-- eslint-disable vuejs-accessibility/anchor-has-content -->
 <template>
     <div class="swiper-wrapper">
         <swiper-container
@@ -17,21 +18,24 @@
                 <div class="card h-100 border-0">
                     <img :src="item.imageUrl" alt="product image"
                         class="card-img-top" style="min-height: 250px">
-                    <div class="card-body ps-4" style="transform: rotate(0)">
-                        <h5 class="card-title">
-                          <a href="#"
-                            class="stretched-link text-black text-decoration-none">
-                            {{ item.title }}</a>
-                        </h5>
-                        <div class="d-flex justify-content-between align-items-center">
-                          <p class="card-text m-0">
-                            <s>${{$filters.currency(item.origin_price)}}</s>
-                            <span class="text-success fw-bold">
-                                ${{$filters.currency(item.price)}}
-                            </span>
-                          </p>
-                          <i class="bi bi-arrow-right pe-4 fs-4"></i>
-                        </div>
+                    <div class="card-body" style="transform: rotate(0)">
+                      <div class="d-flex justify-content-between">
+                        <h5 class="card-title"> {{ item.title }}</h5>
+                        <a href="#" class="position-relative z-3">
+                          <i class="bi bi-suit-heart"></i>
+                        </a>
+                      </div>
+                      <div class="d-flex justify-content-between align-items-center">
+                        <p class="card-text m-0">
+                          <s>${{$filters.currency(item.origin_price)}}</s>
+                          <span class="fw-bold">
+                              ${{$filters.currency(item.price)}}
+                          </span>
+                        </p>
+                        <a href="#" class="stretched-link">
+                          <i class="bi bi-arrow-right fs-4"></i>
+                        </a>
+                      </div>
                     </div>
                 </div>
             </swiper-slide>

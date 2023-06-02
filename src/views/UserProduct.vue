@@ -1,50 +1,97 @@
+<!-- eslint-disable vuejs-accessibility/anchor-has-content -->
 <template>
 <LoadingOverlay :active="isLoading"></LoadingOverlay>
-    <div class="container mt-5">
+<Navbar></Navbar>
+  <div class="pt-5">
+    <div class="container py-5">
         <nav aria-label="breadcrumb">
             <ol class="breadcrumb">
-                <li class="breadcrumb-item"><router-link to="/user/cart">購物車</router-link></li>
+                <li class="breadcrumb-item"><router-link to="/user/products">商品列表</router-link></li>
                 <li class="breadcrumb-item active" aria-current="page">{{product.title}}</li>
             </ol>
         </nav>
-        <div class="row gx-3">
-            <article class="col-8">
-                <h2 class="mb-3">{{product.title}}</h2>
-                <div class="mb-3">{{product.description}}</div>
-                <div class="mb-3">{{product.content}}</div>
-                <img :src="product.imageUrl" alt="product image"
-                class="image-fluid"
-                style="height: 500px">
-            </article>
-            <div class="col-4">
-                <div class="h5" v-if="!product.price">{{product.origin_price}} 元</div>
-                <del class="h6" v-if="product.price">原價 {{product.origin_price}} 元</del>
-                <div class="h5" v-if="product.price">現在只要 {{product.price}} 元</div>
-                <hr>
-                <div class="mb-4">
-                    <label for="qty">
-                        <input type="number" id="qty" v-model="qty">
-                    </label>
-                </div>
-                <button type="button"
-                    class="btn btn-outline-danger"
-                    @click="addCart(product.id)"
-                    :disabled="this.status.loadingItem === product.id">
-                    <div class="spinner-grow spinner-grow-sm text-dander"
-                    role="status"
-                    v-if="this.status.loadingItem === product.id">
-                        <span class="visually-hidden">Loading...</span>
+        <!-- product image carousel-->
+        <div class="row mb-4 gy-4">
+          <div class="col-md-7 d-flex align-items-center" style="height: 400px; overflow: hidden;">
+            <Carousel :product="product"></Carousel>
+          </div>
+
+          <!-- product add to cart -->
+          <div class="col-md-5">
+            <div class="card">
+                <div class="card-body">
+                  <h2 class="card-title mb-3">{{product.title}}</h2>
+                    <div class="h5 card-text" v-if="!product.price">{{product.origin_price}} 元</div>
+                    <del class="h6 card-text"
+                      v-if="product.price">原價 ${{$filters.currency(product.origin_price)}}</del>
+                      <div class="d-flex justify-content-between align-items-center mb-5">
+                        <p class="h5 card-text m-0"
+                          v-if="product.price">現在只要 ${{$filters.currency(product.price)}}</p>
+                        <a href="#"><i class="bi bi-suit-heart"></i></a>
+                      </div>
+
+                    <div class="mb-4">
+                        <label for="qty" class="w-100">
+                            <input type="number" id="qty" v-model="qty"
+                              class="w-100">
+                        </label>
                     </div>
-                    加到購物車</button>
+                      <div class="d-grid">
+                        <button type="button"
+                            class="btn btn-warning"
+                            @click="addCart(product.id)"
+                            :disabled="this.status.loadingItem === product.id">
+                            <div class="spinner-grow spinner-grow-sm text-dander"
+                            role="status"
+                            v-if="this.status.loadingItem === product.id">
+                                <span class="visually-hidden">Loading...</span>
+                            </div>加到購物
+                        </button>
+                      </div>
+                </div>
             </div>
+          </div>
+        </div>
+
+       <!-- product description -->
+        <div class="row">
+          <article class="col-lg-7 text-white">
+            <div class="mb-3">Lorem ipsum dolor sit amet consectetur adipisicing elit.
+              Dolores odio omnis, earum praesentium molestiae sequi. Beatae porro dolorum
+              consequatur delectus.</div>
+            <div class="mb-3">Lorem ipsum dolor sit amet consectetur adipisicing
+              elit. Tenetur, possimus!</div>
+          </article>
         </div>
     </div>
+
+     <!-- product recommendation -->
+    <section>
+      <h2 class="text-white mb-4 text-center">其他人也看過</h2>
+      <SwiperSlider></SwiperSlider>
+      <div class="d-flex justify-content-end">
+        <button class="btn btn-outline-light btn-sm me-5">看更多</button>
+      </div>
+    </section>
+
+    <Footer></Footer>
+  </div>
 </template>
 
 <script>
 import pushMessageState from '@/methods/pushMessageState';
+import Navbar from '../components/UserNavbar.vue';
+import Footer from '../components/UserFooter.vue';
+import Carousel from '../components/CarouselComponent.vue';
+import SwiperSlider from '../components/SwiperSlider.vue';
 
 export default {
+  components: {
+    Navbar,
+    Footer,
+    Carousel,
+    SwiperSlider,
+  },
   data() {
     return {
       isLoading: false,
@@ -54,6 +101,12 @@ export default {
         loadingItem: '',
       },
       qty: 1,
+      swiperOptions: {
+        slidesPerView: 1,
+        pagination: {
+          dynamicBullets: true,
+        },
+      },
     };
   },
   methods: {

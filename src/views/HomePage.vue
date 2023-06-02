@@ -109,18 +109,7 @@ export default {
           backgroundColor: 'rgba(188,121,53)',
         },
       ],
-
-      images: [
-        { imgUrl: 'layout-images/homepage-image-crop.jpg', height: 500 },
-        { imgUrl: 'layout-images/homepage-image-coffee.jpg', height: 500 },
-        { imgUrl: 'layout-images/homepage-image-picnic.jpg', height: 500 },
-      ],
     };
-  },
-  methods: {
-    carouselText() {
-      console.log('hello text');
-    },
   },
   created() {
     console.log(process.env.VUE_APP_API, process.env.VUE_APP_PATH);
