@@ -4,7 +4,8 @@
 <Navbar></Navbar>
 <div class="container pt-5">
   <h3 class="text-white text-center pt-5 permanent-marker">Shopping Cart</h3>
-  <div class="row pt-5">
+  <CartProgressBar :progressBar="progressBar"></CartProgressBar>
+  <div class="row">
     <!-- items in cart table -->
     <div class="col-md-7">
       <div class="card d-md-none mb-3">
@@ -54,7 +55,7 @@
       </div>
 
       <!-- items in cart cards-->
-      <div class="card mb-3 d-none d-md-block" style="max-width: 540px;"
+      <div class="card mb-3 d-none d-md-block border-0" style="max-width: 540px;"
         v-for="item in cart.carts" :key="item.id">
         <div class="row g-0">
           <div class="col-4" style="max-height: 200px;">
@@ -164,12 +165,14 @@
 import DeleteModal from '@/components/DeleteModal.vue';
 import Navbar from '../components/UserNavbar.vue';
 import Footer from '../components/UserFooter.vue';
+import CartProgressBar from '../components/CartProgressBar.vue';
 
 export default {
   components: {
     DeleteModal,
     Navbar,
     Footer,
+    CartProgressBar,
   },
 
   inject: ['emitter', 'pushMessageState'],
@@ -187,7 +190,7 @@ export default {
       status: {
         loadingItem: '',
       },
-
+      progressBar: 1,
     };
   },
 

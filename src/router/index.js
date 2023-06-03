@@ -60,6 +60,10 @@ const routes = [
         path: 'products',
         component: () => import('../views/UserProductsList.vue'),
       },
+      {
+        path: 'orderform',
+        component: () => import('../views/UserOrderForm.vue'),
+      },
     ],
   },
 ];
