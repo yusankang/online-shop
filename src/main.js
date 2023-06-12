@@ -1,6 +1,7 @@
 import { createApp } from 'vue';
 import axios from 'axios';
 import VueAxios from 'vue-axios';
+import { createPinia } from 'pinia';
 import Loading from 'vue3-loading-overlay';
 import 'vue3-loading-overlay/dist/vue3-loading-overlay.css';
 import 'bootstrap-icons/font/bootstrap-icons.css';
@@ -32,11 +33,13 @@ configure({
 });
 setLocale('zh_TW');
 
+const pinia = createPinia();
 const app = createApp(App);
 app.config.globalProperties.$filters = {
   currency,
   date,
 };
+app.use(pinia);
 app.use(VueAxios, axios);
 app.use(register);
 app.component('LoadingOverlay', Loading);

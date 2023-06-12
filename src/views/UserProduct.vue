@@ -32,18 +32,18 @@
 
                     <div class="mb-4">
                         <label for="qty" class="w-100">
-                            <input type="number" id="qty" v-model="qty"
+                            <input type="number" id="qty" min="1" v-model.number="qty"
                               class="w-100">
                         </label>
                     </div>
                       <div class="d-grid">
                         <button type="button"
                             class="btn btn-warning"
-                            @click="addCart(product.id)"
-                            :disabled="this.status.loadingItem === product.id">
+                            @click="addCart(product.id, qty)"
+                            :disabled="cartLoadingItem === product.id">
                             <div class="spinner-grow spinner-grow-sm text-dander"
                             role="status"
-                            v-if="this.status.loadingItem === product.id">
+                            v-if="cartLoadingItem === product.id">
                                 <span class="visually-hidden">Loading...</span>
                             </div>加到購物
                         </button>
@@ -73,13 +73,15 @@
         <button class="btn btn-outline-light btn-sm me-5">看更多</button>
       </div>
     </section>
-
     <Footer></Footer>
   </div>
 </template>
 
 <script>
-import pushMessageState from '@/methods/pushMessageState';
+import { mapState, mapActions } from 'pinia';
+import cartStore from '@/stores/cartStore';
+import productStore from '@/stores/productsStore';
+import statusStore from '@/stores/statusStore';
 import Navbar from '../components/UserNavbar.vue';
 import Footer from '../components/UserFooter.vue';
 import Carousel from '../components/CarouselComponent.vue';
@@ -92,14 +94,13 @@ export default {
     Carousel,
     SwiperSlider,
   },
+  computed: {
+    ...mapState(statusStore, ['isLoading', 'cartLoadingItem']),
+    ...mapState(productStore, ['product']),
+  },
   data() {
     return {
-      isLoading: false,
-      product: {},
       id: '',
-      status: {
-        loadingItem: '',
-      },
       qty: 1,
       swiperOptions: {
         slidesPerView: 1,
@@ -110,33 +111,12 @@ export default {
     };
   },
   methods: {
-    getProduct() {
-      const api = `${process.env.VUE_APP_API}api/${process.env.VUE_APP_PATH}/product/${this.id}`;
-      this.isLoading = true;
-      this.$http.get(api).then((response) => {
-        this.isLoading = false;
-        this.product = response.data.product;
-        console.log(this.product);
-      });
-    },
-    addCart(id) {
-      const api = `${process.env.VUE_APP_API}api/${process.env.VUE_APP_PATH}/cart/`;
-      this.status.loadingItem = id;
-      const cart = {
-        product_id: id,
-        qty: 1,
-      };
-      cart.qty = this.qty;
-      this.$http.post(api, { data: cart }).then((response) => {
-        console.log(cart);
-        this.status.loadingItem = '';
-        pushMessageState(response, '加入購物車');
-      });
-    },
+    ...mapActions(cartStore, ['addCart']),
+    ...mapActions(productStore, ['getProduct']),
   },
   created() {
     this.id = this.$route.params.productId;
-    this.getProduct();
+    this.getProduct(this.id);
   },
 };
 </script>

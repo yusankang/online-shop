@@ -87,6 +87,9 @@
  </style>
 
 <script>
+import { mapState, mapActions } from 'pinia';
+import productsStore from '@/stores/productsStore';
+import statusStore from '@/stores/statusStore';
 import Pagination from '../components/PaginationComponent.vue';
 import Navbar from '../components/UserNavbar.vue';
 import Footer from '../components/UserFooter.vue';
@@ -97,51 +100,57 @@ export default {
     Footer,
     Pagination,
   },
+  inject: ['emitter', 'pushMessageState'],
+  computed: {
+    ...mapState(productsStore, ['products', 'pagination', 'category']),
+    ...mapState(statusStore, ['isLoading']),
+  },
   data() {
     return {
-      isLoading: false,
-      products: [],
-      category: 'all',
-      pagination: {},
-      status: {
-        loadingItem: '',
-      },
+      // isLoading: false,
+      // products: [],
+      // category: 'all',
+      // pagination: {},
+      // status: {
+      //   loadingItem: '',
+      // },
     };
   },
-  inject: ['emitter', 'pushMessageState'],
+
   methods: {
-    getProducts(category, page = 1) {
-      const api = `${process.env.VUE_APP_API}api/${process.env.VUE_APP_PATH}/products/?page=${page}`;
-      this.isLoading = true;
-      this.$http.get(api).then((response) => {
-        this.isLoading = false;
-        this.pagination = response.data.pagination;
-        const { products } = response.data;
-        this.filterCategory(category, products);
-        this.isActive = true;
-      });
-    },
-    filterCategory(category, products) {
-      this.products = products;
-      this.category = category;
-      if (this.category !== 'all') {
-        this.products = this.products.filter((item) => item.category === this.category);
-        console.log(this.products);
-      }
-    },
-    addCart(id) {
-      const api = `${process.env.VUE_APP_API}api/${process.env.VUE_APP_PATH}/cart/`;
-      this.status.loadingItem = id;
-      const cart = {
-        product_id: id,
-        qty: 1,
-      };
-      this.$http.post(api, { data: cart }).then((response) => {
-        this.status.loadingItem = '';
-        this.pushMessageState(response, '加入購物車');
-        this.getCart();
-      });
-    },
+    ...mapActions(productsStore, ['getProducts']),
+    // getProducts(category, page = 1) {
+    //   const api = `${process.env.VUE_APP_API}api/
+    // ${process.env.VUE_APP_PATH}/products/?page=${page}`;
+    //   this.isLoading = true;
+    //   this.$http.get(api).then((response) => {
+    //     this.isLoading = false;
+    //     this.pagination = response.data.pagination;
+    //     const { products } = response.data;
+    //     this.filterCategory(category, products);
+    //   });
+    // },
+    // filterCategory(category, products) {
+    //   this.products = products;
+    //   this.category = category;
+    //   if (this.category !== 'all') {
+    //     this.products = this.products.filter((item) => item.category === this.category);
+    //     console.log(this.products);
+    //   }
+    // },
+    // addCart(id) {
+    //   const api = `${process.env.VUE_APP_API}api/${process.env.VUE_APP_PATH}/cart/`;
+    //   this.status.loadingItem = id;
+    //   const cart = {
+    //     product_id: id,
+    //     qty: 1,
+    //   };
+    //   this.$http.post(api, { data: cart }).then((response) => {
+    //     this.status.loadingItem = '';
+    //     this.pushMessageState(response, '加入購物車');
+    //     this.getCart();
+    //   });
+    // },
     getProduct(id) {
       this.$router.push(`/user/product/${id}`);
     },

@@ -3,7 +3,7 @@
         :class="navbarClass"
         style="transition: all 1s;">
         <div class="container-fluid">
-            <a class="navbar-brand hvr-grow" href="#">
+            <a href="#" class="navbar-brand hvr-grow">
                 <h1>
                     <img :src="require(`../assets/images/${logoUrl}`)" alt="野生廚房"
                         style="height: 50px">
@@ -22,29 +22,29 @@
             <div class="collapse navbar-collapse" id="navbarNav">
                 <ul class="navbar-nav ms-auto">
                     <li class="nav-item mx-3">
-                        <a class="nav-link fs-6"
-                          aria-current="page" href="#"
-                          :class="navLinksClass">Home</a>
+                        <router-link to="/" class="nav-link fs-6"
+                          aria-current="page"
+                          :class="navLinksClass">Home</router-link>
                     </li>
                     <li class="nav-item mx-3">
-                        <a class="nav-link fs-6" href="#"
-                          :class="navLinksClass">商品列表</a>
+                        <router-link to="/user/products" class="nav-link fs-6"
+                          :class="navLinksClass">商品列表</router-link>
                     </li>
                     <li class="nav-item mx-3">
-                        <a class="nav-link fs-6" href="#"
-                          :class="navLinksClass">野生菜單</a>
+                        <router-link to="/user/recipes" class="nav-link fs-6"
+                          :class="navLinksClass">野生菜單</router-link>
                     </li>
                     <li class="nav-item mx-3">
-                        <button class="nav-link fs-6 hvr-bob"
+                        <router-link to="/user/favorites" class="nav-link fs-6 hvr-bob"
                           :class="navLinksClass">
                             <i class="bi bi-suit-heart"></i>
-                        </button>
+                        </router-link>
                     </li>
                     <li class="nav-item mx-3">
-                        <button class="nav-link fs-6 hvr-bob"
+                        <router-link to="/user/cart" class="nav-link fs-6 hvr-bob"
                           :class="navLinksClass">
                             <i class="bi bi-cart3"></i>
-                        </button>
+                        </router-link>
                     </li>
                 </ul>
             </div>
@@ -75,7 +75,7 @@ export default {
   methods: {
     changeNavBg() {
       const scrollValue = window.scrollY;
-      if (scrollValue > 200) {
+      if (scrollValue > 100) {
         this.logoUrl = 'logos/logo-black.png';
         this.navbarClass = { 'bg-transparent': false, 'bg-white': true };
         this.navLinksClass = { 'text-white': false, 'text-dark': true };
