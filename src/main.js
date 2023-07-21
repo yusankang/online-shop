@@ -1,4 +1,4 @@
-import { createApp } from 'vue';
+import { createApp, markRaw } from 'vue';
 import axios from 'axios';
 import VueAxios from 'vue-axios';
 import { createPinia } from 'pinia';
@@ -6,10 +6,7 @@ import Loading from 'vue3-loading-overlay';
 import 'vue3-loading-overlay/dist/vue3-loading-overlay.css';
 import 'bootstrap-icons/font/bootstrap-icons.css';
 import 'hover.css/css/hover.css';
-import { library } from '@fortawesome/fontawesome-svg-core';
-import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
 import { register } from 'swiper/element/bundle';
-import { fas } from '@fortawesome/free-solid-svg-icons';
 import {
   Form, Field, ErrorMessage, defineRule, configure,
 } from 'vee-validate';
@@ -20,8 +17,6 @@ import zhTW from '@vee-validate/i18n/dist/locale/zh_TW.json';
 import App from './App.vue';
 import router from './router';
 import { currency, date } from './methods/filters';
-
-library.add(fas);
 
 Object.keys(AllRules).forEach((rule) => {
   defineRule(rule, AllRules[rule]);
@@ -39,11 +34,14 @@ app.config.globalProperties.$filters = {
   currency,
   date,
 };
+pinia.use(({ store }) => {
+  // eslint-disable-next-line no-param-reassign
+  store.router = markRaw(router);
+});
 app.use(pinia);
 app.use(VueAxios, axios);
 app.use(register);
 app.component('LoadingOverlay', Loading);
-app.component('font-awesome-icon', FontAwesomeIcon);
 // eslint-disable-next-line vue/multi-word-component-names
 app.component('Form', Form);
 // eslint-disable-next-line vue/multi-word-component-names

@@ -11,32 +11,34 @@
             :grabCursor="true"
             @swiper="onSwiper"
             @slideChange="onSlideChange"
-            class="default-slider px-5 pb-5"
-        >
-            <swiper-slide v-for="item in products" :key="item.title"
+            class="default-slider px-5 pb-5">
+            <swiper-slide v-for="item in swiperProducts" :key="item.title"
                 class="swiper-slide">
                 <div class="card h-100 border-0">
-                    <img :src="item.imageUrl" alt="product image"
-                        class="card-img-top" style="min-height: 250px">
-                    <div class="card-body" style="transform: rotate(0)">
-                      <div class="d-flex justify-content-between">
-                        <h5 class="card-title"> {{ item.title }}</h5>
-                        <a href="#" class="position-relative z-3">
-                          <i class="bi bi-suit-heart"></i>
-                        </a>
-                      </div>
-                      <div class="d-flex justify-content-between align-items-center">
-                        <p class="card-text m-0">
-                          <s>${{$filters.currency(item.origin_price)}}</s>
-                          <span class="fw-bold">
-                              ${{$filters.currency(item.price)}}
-                          </span>
-                        </p>
-                        <a href="#" class="stretched-link">
-                          <i class="bi bi-arrow-right fs-4"></i>
-                        </a>
-                      </div>
+                  <img :src="item.imageUrl" alt="product image"
+                        class="card-img-top"
+                        style="min-height: 250px; height: 20vw; object-fit: cover;">
+                  <div class="card-body d-flex flex-column">
+                    <div class="d-flex justify-content-between">
+                      <h5 class="card-title fs-6">
+                      {{ item.title }}
+                      </h5>
                     </div>
+                    <div class="d-flex justify-content-between align-items-center mt-auto">
+                      <p class="card-text m-0">
+                        <s v-if="item.origin_price !== item.price">
+                          ${{$filters.currency(item.origin_price)}}
+                        </s>
+                        <span class="fw-bold">
+                            ${{$filters.currency(item.price)}}
+                        </span>
+                      </p>
+                      <a href="#" class="stretched-link"
+                        @click.prevent="getProduct(item.id)">
+                          <i class="bi bi-arrow-right fs-4"></i>
+                      </a>
+                    </div>
+                  </div>
                 </div>
             </swiper-slide>
         </swiper-container>
@@ -47,22 +49,30 @@
 import {
   Navigation, Pagination, A11y,
 } from 'swiper';
-
-// Import Swiper Vue.js components
 import { Swiper, SwiperSlide } from 'swiper/vue';
-// Import Swiper styles
 import 'swiper/swiper.css';
 import 'swiper/swiper-bundle.css';
+import { mapState, mapActions } from 'pinia';
+import productsStore from '@/stores/productsStore';
 
 export default {
+  computed: {
+    ...mapState(productsStore, ['allProducts']),
+  },
   components: {
     // eslint-disable-next-line vue/no-unused-components
     Swiper,
     SwiperSlide,
   },
+  props: ['category'],
+  watch: {
+    category() {
+      this.checkCategory();
+    },
+  },
   data() {
     return {
-      products: [],
+      swiperProducts: [],
       pagination: {
         dynamicBullets: true,
       },
@@ -83,28 +93,45 @@ export default {
     };
   },
   setup() {
-    const onSwiper = (swiper) => {
-      console.log(swiper);
-    };
-    const onSlideChange = () => {
-      console.log('slide change');
-    };
+    // const onSwiper = (swiper) => {
+    //   console.log(swiper);
+    // };
+    // const onSlideChange = () => {
+    //   console.log('slide change');
+    // };
     return {
-      onSwiper,
-      onSlideChange,
+      // onSwiper,
+      // onSlideChange,
       modules: [Navigation, Pagination, A11y],
     };
   },
   methods: {
-    getProducts() {
-      const api = `${process.env.VUE_APP_API}api/${process.env.VUE_APP_PATH}/products/all`;
-      this.$http.get(api).then((response) => {
-        this.products = response.data.products;
-      });
+    ...mapActions(productsStore, ['getProducts', 'setCategory']),
+    getProduct(id) {
+      console.log('clicked product', id);
+      this.$router.push(`/user/product/${id}`);
+      this.$emit('productId', id);
+    },
+    checkCategory() {
+      if (this.category === 'sale') {
+        this.getSaleProducts();
+      } else if (this.category === 'other') {
+        const arr = this.allProducts;
+        const num = 7;
+        this.getOtherProducts(arr, num);
+      }
+    },
+    getSaleProducts() {
+      this.swiperProducts = this.allProducts.filter((item) => item.origin_price > item.price);
+    },
+    getOtherProducts(arr, num) {
+      const randomProducts = [...arr].sort(() => 0.5 - Math.random());
+      this.swiperProducts = randomProducts.slice(0, num);
     },
   },
-  created() {
-    this.getProducts();
+  async created() {
+    await this.getProducts();
+    this.checkCategory();
   },
 };
 </script>

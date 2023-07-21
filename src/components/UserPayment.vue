@@ -23,6 +23,8 @@
       <label class="form-label" for="cardNumber">信用卡號碼</label>
       <Field class="form-control" type="text" id="cardNumber"
         name="信用卡號碼" maxlength="19"
+        autocomplete="off"
+        oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*)\./g, '$1');"
         v-model="cardNumber" placeholder="0000 0000 0000 0000"
         :class="{ 'is-invalid': errors['信用卡號碼'] }"
         rules="required"></Field>
@@ -31,6 +33,7 @@
     <div class="mb-3">
       <label class="form-label" for="cardName">信用卡姓名</label>
       <Field class="form-control" type="text" id="cardName"
+        autocomplete="off"
         name="信用卡姓名" v-model="customerCardInfo.cardName"
         :class="{ 'is-invalid':errors['信用卡姓名'] }"
         rules="required"></Field>
@@ -69,6 +72,7 @@
         <Field type="text" name="CVV號碼" id="cardCvv"
           class="form-control" maxlength="3" v-model="customerCardInfo.cardCvv"
           placeholder="000"
+          oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*)\./g, '$1');"
           :class="{ 'is-invalid':errors['CVV號碼'] }"
           rules="required"></Field>
         <ErrorMessage name="CVV號碼" class="invalid-feedback"></ErrorMessage>
@@ -110,6 +114,7 @@
       <Field type="text" name="帳號末五碼" class="form-control" id="paymentAcc"
         placeholder="00000" maxlength="5"
         v-model="customerAccInfo.paymentAcc"
+        oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*)\./g, '$1');"
         :class="{ 'is-invalid': errors['帳號末五碼'] }"
         rules="required"></Field>
         <ErrorMessage name="帳號末五碼" class="invalid-feedback"></ErrorMessage>
@@ -118,23 +123,21 @@
         <button class="btn btn-warning w-100">通知已匯款</button>
     </div>
   </Form>
-  <PaidOrderModal ref="paidModal"></PaidOrderModal>
 </template>
 
 <script>
 import { mapState, mapActions } from 'pinia';
 import orderStore from '@/stores/orderStore';
 import statusStore from '@/stores/statusStore';
-import PaidOrderModal from './PaidOrderModal.vue';
 
 export default {
   components: {
-    PaidOrderModal,
   },
   computed: {
     ...mapState(orderStore, ['order', 'orderIsPaid']),
     ...mapState(statusStore, ['isLoading']),
   },
+
   watch: {
     cardNumber() {
       const realNumber = this.cardNumber.replace(/ /gi, '');
@@ -142,16 +145,13 @@ export default {
       this.cardNumber = formattedNumber.join(' ');
       this.customerCardInfo.realCardNumber = realNumber;
     },
-    orderIsPaid() {
-      this.$router.push('./ordercomplete');
-    },
   },
   methods: {
     ...mapActions(orderStore, ['payOrder']),
+
     paymentMethod(event) {
       const paymentMethod = event.target.value;
       this.payment = paymentMethod;
-      console.log(this.payment);
     },
   },
   data() {

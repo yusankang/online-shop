@@ -1,123 +1,114 @@
+<!-- eslint-disable vuejs-accessibility/label-has-for -->
 <template>
 <!-- Modal -->
-    <div
-        class="modal"
-        id="exampleModal"
-        tabindex="-1"
-        aria-labelledby="exampleModalLabel"
-        aria-hidden="true"
-        ref="modal"
-    >
-        <div class="modal-dialog">
-            <div class="modal-content">
-            <div class="modal-header bg-dark text-white">
-                <h5 class="modal-title">新增優惠卷</h5>
-                <button type="button"
-                    class="btn-close"
-                    data-bs-dismiss="modal"
-                    aria-label="Close"
-                ></button>
-            </div>
-            <div class="modal-body">
-              <div class="row">
-                <div class="col-sm-6">
-                  <div class="mb-3">
-                    <label for="title">
-                        優惠卷名稱
-                        <input
-                            type="text"
-                            class="form-control"
-                            id="title"
-                            placeholder="請輸入優惠卷名稱"
-                            v-model="tempCoupon.title"
-                        />
-                    </label>
-                  </div>
-                  <div class="mb-3">
-                      <label for="percent">
-                          折扣百分比
-                          <input
-                              type="number"
-                              class="form-control"
-                              id="percent"
-                              placeholder="請輸入折扣百分比"
-                              v-model="tempCoupon.percent"
-                          />
-                      </label>
-                  </div>
-                  <div class="mb-3">
-                      <label for="due-date">
-                          到期日
-                          <input
-                              type="date"
-                              class="form-control"
-                              id="due-date"
-                              placeholder="請輸入到期日"
-                              v-model="due_date"
-                          />
-                      </label>
-                  </div>
-                </div>
-                <div class="col-sm-6">
-                  <div class="mb-3">
-                    <label for="code">
-                        優惠卷密碼
-                        <input
-                            type="text"
-                            class="form-control"
-                            id="code"
-                            placeholder="請輸入優惠卷密碼"
-                            v-model.number="tempCoupon.code"
-                        />
-                    </label>
-                  </div>
-                  <div class="form-check">
-                    <label class="form-check-label" for="is_enabled">
-                      是否啟用
-                      <input
-                        class="form-check-input"
-                        type="checkbox"
-                        :true-value="1"
-                        :false-value="0"
-                        id="is_enabled"
-                        v-model="tempCoupon.is_enabled"
-                      />
-                    </label>
-                  </div>
-                </div>
+  <div class="modal fade" id="exampleModal" tabindex="-1"
+    aria-labelledby="exampleModalLabel" aria-hidden="true"
+    ref="modal" data-bs-backdrop="static" data-bs-keyboard="false">
+    <div class="modal-dialog">
+      <Form class="modal-content border-0" ref="couponForm"
+        v-slot="{ errors }" @submit="$emit('update-coupon', tempCoupon),
+        clearInput(), reset(), $emit('hideCouponModal')">
+        <div class="modal-header bg-light">
+            <h5 class="modal-title" id="exampleModalLabel">
+              <span>新增優惠卷</span>
+            </h5>
+            <button type="button" class="btn-close"
+              data-bs-dismiss="modal" aria-label="Close"
+              @click="clearInput(); reset()">
+            </button>
+        </div>
+        <div class="modal-body">
+          <div class="row">
+            <div class="col-sm-6">
+              <div class="mb-3">
+                <label for="title">優惠卷名稱</label>
+                <Field type="text" class="form-control"
+                  id="title" name="名稱"
+                  placeholder="請輸入優惠卷名稱"
+                  :class="{ 'is-invalid': errors['名稱'] }"
+                  rules="required"
+                  v-model="tempCoupon.title"></Field>
+                  <ErrorMessage name="名稱" class="invalid-feedback"></ErrorMessage>
+              </div>
+              <div class="mb-3">
+                <label for="percent">折扣百分比(e.g. 80 = 8折) </label>
+                <Field type="number" class="form-control"
+                  id="percent" name="折扣"
+                  :class="{ 'is-invalid': errors['折扣'] }"
+                  rules="required"
+                  v-model.number="tempCoupon.percent"></Field>
+                  <ErrorMessage name="折扣" class="invalid-feedback"></ErrorMessage>
+              </div>
+              <div class="mb-3">
+                <label for="due-date">到期日</label>
+                <input type="text" class="form-control" ref="dateInput"
+                  id="due-date" name="到期日"
+                  :placeholder="datePlaceholder"
+                  onfocus="type='date'"
+                  onblur="type='text'"
+                  v-model="due_date"/>
               </div>
             </div>
-            <div class="modal-footer">
-                <button type="button"
-                    class="btn btn-secondary" data-bs-dismiss="modal"
-                >取消</button>
-                <button type="button"
-                    class="btn btn-primary"
-                    @click="$emit('update-coupon', tempCoupon)"
-                >確認</button>
+            <div class="col-sm-6">
+              <div class="mb-3">
+                <label for="code">優惠卷密碼</label>
+                <Field type="text" class="form-control"
+                  id="code" name="密碼"
+                  placeholder="請輸入優惠卷密碼"
+                  :class="{ 'is-invalid': errors['密碼'] }"
+                  rules="required"
+                  v-model="tempCoupon.code"></Field>
+                  <ErrorMessage name="密碼" class="invalid-feedback"></ErrorMessage>
+              </div>
+              <div class="form-check">
+                <label class="form-check-label" for="is_enabled">
+                  是否啟用
+                  <input class="form-check-input"
+                    type="checkbox"
+                    :true-value="1"
+                    :false-value="0"
+                    id="is_enabled"
+                    v-model="tempCoupon.is_enabled"/>
+                </label>
+              </div>
             </div>
-            </div>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-outline-danger"
+            data-bs-dismiss="modal" @click="clearInput(); reset()">取消</button>
+          <button class="btn btn-secondary">確認</button>
+        </div>
+      </Form>
+    </div>
   </div>
-</div>
 </template>
 
 <script>
 import modalMixin from '@/mixins/modalMixin';
 
 export default {
+  mixins: [modalMixin],
   props: {
     coupon: {
       type: Object,
       default() { return {}; },
     },
   },
+  computed: {
+    datePlaceholder() {
+      const date = new Date(this.displayDate * 1000);
+      return date.toLocaleDateString('en-US');
+    },
+  },
   watch: {
     coupon() {
       this.tempCoupon = this.coupon;
+      this.displayDate = this.coupon.due_date;
     },
     due_date() {
       this.tempCoupon.due_date = Math.floor(new Date(this.due_date) / 1000);
-      console.log(this.due_date);
+      this.displayDate = Math.floor(new Date(this.due_date) / 1000);
     },
   },
   data() {
@@ -125,8 +116,16 @@ export default {
       modal: {},
       tempCoupon: {},
       due_date: '',
+      displayDate: '',
     };
   },
-  mixins: [modalMixin],
+  methods: {
+    clearInput() {
+      this.due_date = '';
+    },
+    reset() {
+      this.$refs.couponForm.resetForm();
+    },
+  },
 };
 </script>

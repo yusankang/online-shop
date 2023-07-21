@@ -2,7 +2,9 @@
   <nav aria-label="Page navigation example">
     <ul class="pagination justify-content-center">
       <li class="page-item">
-        <a class="page-link" href="#" aria-label="Previous">
+        <a class="page-link" href="#" aria-label="Previous"
+           @click.prevent="prevButton"
+           :class="{ 'disabled':pages.current_page === 1}">
           <span aria-hidden="true">&laquo;</span>
         </a>
       </li>
@@ -11,7 +13,9 @@
         <a class="page-link" href="#" @click.prevent="updatePage(page)">{{ page }}</a>
       </li>
       <li class="page-item">
-        <a class="page-link" href="#" aria-label="Next">
+        <a class="page-link" href="#" aria-label="Next"
+        @click.prevent="nextButton"
+          :class="{ 'disabled':pages.current_page === pages.total_pages}">
           <span aria-hidden="true">&raquo;</span>
         </a>
       </li>
@@ -20,13 +24,19 @@
 </template>
 
 <script>
-// :pages="{ 頁碼資訊 }"
-// @emitPages="更新頁面事件"
 export default {
   props: ['pages'],
   methods: {
     updatePage(page) {
       this.$emit('emit-pages', page);
+    },
+    nextButton() {
+      const page = this.pages.current_page + 1;
+      this.updatePage(page);
+    },
+    prevButton() {
+      const page = this.pages.current_page - 1;
+      this.updatePage(page);
     },
   },
 };

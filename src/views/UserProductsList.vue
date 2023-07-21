@@ -1,12 +1,11 @@
 <!-- eslint-disable vuejs-accessibility/anchor-has-content -->
 <template>
-<LoadingOverlay :active="isLoading"></LoadingOverlay>
-<Navbar></Navbar>
-<div>
+  <LoadingOverlay :active="isLoading"></LoadingOverlay>
   <header class="products-header header-img d-flex align-items-center justify-content-center mb-5">
     <div>
-      <h2 class="text-white permanent-marker display-3">In the heart of nature</h2>
-      <h2 class="text-white text-center">在大自然中享受美食</h2>
+      <h2 class="text-white text-center permanent-marker display-3">
+        Inspired by Nature
+      </h2>
     </div>
   </header>
 
@@ -14,33 +13,37 @@
     <div class="row gy-4">
       <!-- side bar -->
       <div class="side-bar col-md-3">
-        <ul class="list-group">
+        <ul class="list-group sticky-md-top" style="top: 100px;">
           <li class="list-group-item"
             :class="{ active: category === 'all' }">
-            <a href="#" @click.prevent="getProducts('all')">全部商品</a>
+            <a href="#" @click.prevent="getProducts('all'), setCategory('all')">全部商品</a>
           </li>
           <li class="list-group-item"
             :class="{ active: category === '廚具' }">
-            <a href="#" @click.prevent="getProducts('廚具')">戶外廚具</a></li>
-          <li class="list-group-item"
-            :class="{ active: category === '餐具' }">
-            <a href="#" @click.prevent="getProducts('餐具')">戶外餐具</a></li>
+            <a href="#" @click.prevent="setCategory('廚具'), getProducts()">戶外廚具</a>
+          </li>
           <li class="list-group-item"
             :class="{ active: category === '咖啡' }">
-            <a href="#" @click.prevent="getProducts('咖啡')">咖啡系列</a></li>
+            <a href="#" @click.prevent="setCategory('咖啡'), getProducts()">咖啡系列</a>
+          </li>
           <li class="list-group-item"
             :class="{ active: category === '野餐' }">
-            <a href="#" @click.prevent="getProducts('野餐')">野餐系列</a></li>
+            <a href="#" @click.prevent="setCategory('野餐'), getProducts()">野餐系列</a>
+          </li>
+          <li class="list-group-item"
+            :class="{ active: category === 'sale' }">
+            <a href="#" @click.prevent="setCategory('sale'), getProducts()">Sale</a>
+          </li>
         </ul>
       </div>
 
       <!-- product list -->
       <div class="col-md-9 mb-5 position-relative">
         <h5 class="text-white position-absolute top-50 start-50 translate-middle"
-          v-if="this.products.length === 0">補貨中！請稍後再查詢</h5>
-        <div class="row gy-4">
+          v-if="this.displayProducts.length === 0">補貨中！請稍後再查詢</h5>
+        <div class="row gy-4 mb-5">
           <div class="col-md-6 col-lg-4"
-            v-for="item in products" :key="item.id">
+            v-for="item in displayProducts" :key="item.id">
             <div class="card h-100 border-0">
               <img :src="item.imageUrl" alt="product image"
                     class="card-img-top"
@@ -50,11 +53,12 @@
                   <h5 class="card-title fs-6">
                   {{ item.title }}
                   </h5>
-                  <a href="#" class="position-relative z-3"><i class="bi bi-suit-heart"></i></a>
                 </div>
                 <div class="d-flex justify-content-between align-items-center mt-auto">
                   <p class="card-text m-0">
-                    <s>${{$filters.currency(item.origin_price)}}</s>
+                    <s v-if="item.origin_price !== item.price">
+                      ${{$filters.currency(item.origin_price)}}
+                    </s>
                     <span class="fw-bold">
                         ${{$filters.currency(item.price)}}
                     </span>
@@ -68,13 +72,14 @@
             </div>
           </div>
         </div>
+         <Pagination v-if="filteredProducts.length > 0"
+          :productsNum="filteredProducts.length"
+          :productCategory="category"
+          @emit-pages="setCurrentPage">
+        </Pagination>
       </div>
     </div>
   </section>
-  <Pagination :pages="pagination"
-    v-if="this.products.length > 0"></Pagination>
-  <Footer></Footer>
-</div>
 </template>
 
  <style>
@@ -89,74 +94,29 @@
 <script>
 import { mapState, mapActions } from 'pinia';
 import productsStore from '@/stores/productsStore';
+import cartStore from '@/stores/cartStore';
 import statusStore from '@/stores/statusStore';
-import Pagination from '../components/PaginationComponent.vue';
-import Navbar from '../components/UserNavbar.vue';
-import Footer from '../components/UserFooter.vue';
+import Pagination from '../components/CustomPagination.vue';
 
 export default {
   components: {
-    Navbar,
-    Footer,
     Pagination,
   },
-  inject: ['emitter', 'pushMessageState'],
   computed: {
-    ...mapState(productsStore, ['products', 'pagination', 'category']),
+    ...mapState(productsStore, ['allProducts', 'filteredProducts', 'displayProducts', 'pagination', 'category']),
+    ...mapState(cartStore, ['cart']),
     ...mapState(statusStore, ['isLoading']),
   },
-  data() {
-    return {
-      // isLoading: false,
-      // products: [],
-      // category: 'all',
-      // pagination: {},
-      // status: {
-      //   loadingItem: '',
-      // },
-    };
-  },
-
   methods: {
-    ...mapActions(productsStore, ['getProducts']),
-    // getProducts(category, page = 1) {
-    //   const api = `${process.env.VUE_APP_API}api/
-    // ${process.env.VUE_APP_PATH}/products/?page=${page}`;
-    //   this.isLoading = true;
-    //   this.$http.get(api).then((response) => {
-    //     this.isLoading = false;
-    //     this.pagination = response.data.pagination;
-    //     const { products } = response.data;
-    //     this.filterCategory(category, products);
-    //   });
-    // },
-    // filterCategory(category, products) {
-    //   this.products = products;
-    //   this.category = category;
-    //   if (this.category !== 'all') {
-    //     this.products = this.products.filter((item) => item.category === this.category);
-    //     console.log(this.products);
-    //   }
-    // },
-    // addCart(id) {
-    //   const api = `${process.env.VUE_APP_API}api/${process.env.VUE_APP_PATH}/cart/`;
-    //   this.status.loadingItem = id;
-    //   const cart = {
-    //     product_id: id,
-    //     qty: 1,
-    //   };
-    //   this.$http.post(api, { data: cart }).then((response) => {
-    //     this.status.loadingItem = '';
-    //     this.pushMessageState(response, '加入購物車');
-    //     this.getCart();
-    //   });
-    // },
+    ...mapActions(productsStore, ['getProducts', 'filterProducts', 'setCategory', 'setCurrentPage', 'scrollToTop']),
+
     getProduct(id) {
       this.$router.push(`/user/product/${id}`);
     },
   },
   created() {
-    this.getProducts('all');
+    this.getProducts();
+    this.scrollToTop();
   },
 };
 </script>

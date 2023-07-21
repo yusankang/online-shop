@@ -1,8 +1,7 @@
 <template>
   <LoadingOverlay :active="isLoading"></LoadingOverlay>
-  <Navbar></Navbar>
   <div class="container pt-5">
-    <h3 class="text-white text-center pt-5 permanent-marker">Payment</h3>
+    <h3 class="text-white text-center pt-5 permanent-marker">Your Order</h3>
     <CartProgressBar :progressBar="progressBar"></CartProgressBar>
       <form @submit.prevent="payOrder">
         <div class="row d-flex flex-md-row-reverse">
@@ -11,25 +10,21 @@
             <div class="card border-0">
               <div class="card-body border-0">
                 <h5 class="text-center mb-3">訂單明細</h5>
-                <table class="table">
-                  <thead>
-                    <tr>
-                    <th>圖</th>
-                    <th>品名</th>
-                    <th>數量</th>
-                    <th>單價</th>
-                    <th>金額</th>
-                    </tr>
-                  </thead>
-                  <tbody>
+                <table class="table table-sm align-middle">
+                  <tbody class="table-group-divider">
                       <tr v-for="item in order.products" :key="item.id">
-                        <td width="70px" class="ps-0">
+                        <td>
                           <img :src="item.product.imageUrl" alt="product image"
-                          class="img-fluid"></td>
-                        <td>{{ item.product.title }}</td>
-                        <td width="50px">{{ item.qty }}/ {{ item.product.unit }}</td>
-                        <td width="50px">${{ $filters.currency(item.product.price) }}</td>
-                        <td width="50px">${{ $filters.currency(item.total) }}</td>
+                          class="img-fluid" style="max-width:80px;">
+                        </td>
+                        <td class="w-100">
+                          <h5>{{ item.product.title }}</h5>
+                          <div class="w-100 d-flex align-items-center justify-content-between">
+                            <span>單價 ${{ $filters.currency(item.product.price) }}</span>
+                            <span>{{ item.qty }}/ {{ item.product.unit }}</span>
+                            <strong>${{ $filters.currency(item.total) }}</strong>
+                          </div>
+                        </td>
                       </tr>
                   </tbody>
                 </table>
@@ -83,6 +78,10 @@
                 <table class="table">
                     <tbody>
                         <tr>
+                            <th width="120">訂單號碼</th>
+                            <td>{{ order.id }}</td>
+                        </tr>
+                        <tr>
                             <th width="120">Email</th>
                             <td>{{ order.user.email }}</td>
                         </tr>
@@ -100,7 +99,7 @@
                         </tr>
                         <tr>
                             <th>付款狀態</th>
-                            <td v-if="!order.is_paid">尚未付款</td>
+                            <td v-if="!order.is_paid" class="text-danger">尚未付款</td>
                             <td v-else class="text-success">付款完成</td>
                         </tr>
                     </tbody>
@@ -120,28 +119,24 @@
       </form>
 
   </div>
-    <Footer></Footer>
 </template>
 
 <script>
-
 import { mapState, mapActions } from 'pinia';
 import orderStore from '@/stores/orderStore';
+import cartStore from '@/stores/cartStore';
 import statusStore from '@/stores/statusStore';
-import Navbar from '../components/UserNavbar.vue';
-import Footer from '../components/UserFooter.vue';
+import productsStore from '@/stores/productsStore';
 import CartProgressBar from '../components/CartProgressBar.vue';
 import Payment from '../components/UserPayment.vue';
 
 export default {
   components: {
-    Navbar,
-    Footer,
     CartProgressBar,
     Payment,
   },
   computed: {
-    ...mapState(orderStore, ['order', 'shippingFee', 'isUseCoupon', 'couponCode', 'couponPercent', 'subTotal']),
+    ...mapState(orderStore, ['order', 'shippingFee', 'isUseCoupon', 'couponCode', 'couponPercent', 'subTotal', 'orderIsPaid']),
     ...mapState(statusStore, ['isLoading']),
   },
   data() {
@@ -151,10 +146,20 @@ export default {
   },
   methods: {
     ...mapActions(orderStore, ['getOrder']),
+    ...mapActions(cartStore, ['getCart']),
+    ...mapActions(productsStore, ['scrollToTop']),
+    isPaid() {
+      if (this.order.is_paid) {
+        this.progressBar = 4;
+      }
+    },
   },
-  created() {
+  async created() {
     const { orderId } = this.$route.params;
-    this.getOrder(orderId);
+    await this.getOrder(orderId);
+    await this.getCart();
+    this.isPaid();
+    this.scrollToTop();
   },
 };
 </script>

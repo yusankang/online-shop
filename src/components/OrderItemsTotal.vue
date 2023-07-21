@@ -7,51 +7,57 @@
           <h5 class="text-center mb-3" v-if="progress === 1">購物車品項</h5>
           <h5 class="text-center mb-3" v-else>訂單品項</h5>
           <table class="table table-sm align-middle">
-          <thead>
-              <tr>
-              <th>圖</th>
-              <th>品名</th>
-              <th>數量</th>
-              <th>單價</th>
-              <th v-if="progress > 1">金額</th>
-              <th></th>
+            <tbody class="table-group-divider">
+              <tr v-for="item in cart.carts" :key="item.id">
+                  <td style="width: 70px;" class="ps-0">
+                    <img :src="item.product.imageUrl" alt="product image"
+                      class="img-fluid">
+                  </td>
+                  <td>
+                    <div>
+                      <div class="d-flex justify-content-between align-items-start">
+                        <h5>{{item.product.title}}</h5>
+                        <button type="button"
+                            v-if="progress === 1"
+                            class="btn btn-sm text-warning p-0"
+                            @click="openDeleteModal(item)">
+                            <i class="bi bi-trash3"></i>
+                        </button>
+                      </div>
+                      <div class="d-flex justify-content-between align-items-center">
+                        <span>單價 ${{$filters.currency(item.product.price)}}</span>
+                        <div v-if="progress > 1">
+                          {{item.qty}}/{{ item.product.unit }}
+                        </div>
+                      </div>
+                      <div v-if="progress === 1">
+                        <label for="qty" class="input-group input-group-sm mb-3">
+                          <button class="btn btn-outline-warning" type="button"
+                            @click.prevent="checkQty(item, 'subtract')">
+                            <i class="bi bi-dash"></i>
+                          </button>
+                          <input type="text"
+                              id="qty"
+                              onfocus="this.blur()"
+                              class="form-control"
+                              v-model.number="item.qty"/>
+                          <div class="input-group-text">/ {{ item.product.unit }}</div>
+                          <button class="btn btn-outline-warning" type="button"
+                            @click.prevent="checkQty(item, 'add')">
+                            <i class="bi bi-plus"></i>
+                          </button>
+                        </label>
+                      </div>
+                      <div class="d-flex justify-content-between">
+                        <strong>${{ $filters.currency(item.total) }}</strong>
+                        <span v-if="message && itemId === item.id"
+                          class="text-danger">{{ message }}{{item.product.unit}}
+                        </span>
+                      </div>
+                    </div>
+                  </td>
               </tr>
-          </thead>
-          <tbody class="table-group-divider">
-            <tr v-for="item in cart.carts" :key="item.id">
-                <td style="width: 70px;" class="ps-0">
-                <img :src="item.product.imageUrl" alt="product image"
-                class="img-fluid"></td>
-                <td class="fs-6">{{item.product.title}}</td>
-                <td style="width: 95px"
-                  v-if="progress === 1">
-                <label for="qty" class="input-group input-group-sm">
-                    <input type="number"
-                    min="1"
-                    :disabled = "cartLoadingItem === item.id"
-                    @change="updateCart(item)"
-                    id="qty"
-                    class="form-control"
-                    v-model.number="item.qty"/>
-                    <div class="input-group-text">/ {{ item.product.unit }}</div>
-                </label>
-                </td>
-                <td width="50px"
-                  v-if="progress > 1">
-                  {{item.qty}}/{{ item.product.unit }}
-                </td>
-                <td style="width: 50px">${{$filters.currency(item.product.price)}}</td>
-                <td width="50px">${{ $filters.currency(item.total) }}</td>
-                <td class="pe-0">
-                <button type="button"
-                    v-if="progress === 1"
-                    class="btn btn-sm text-warning pe-0"
-                    @click="openDeleteModal(item)">
-                    <i class="bi bi-trash3"></i>
-                </button>
-                </td>
-            </tr>
-          </tbody>
+            </tbody>
           </table>
         </div>
       </div>
@@ -62,33 +68,45 @@
       style="max-width: 540px;"
         v-for="item in cart.carts" :key="item.id">
         <div class="row g-0">
-            <div class="col-4" style="max-height: 200px;">
+          <div class="col-4" style="max-height: 200px;">
             <img :src="item.product.imageUrl" alt="product image"
                 class="rounded-start h-100 w-100"
                 style="object-fit: cover;">
             </div>
             <div class="col-8">
-            <div class="card-body">
-                <div class="d-flex justify-content-between">
-                <h5 class="card-title">{{ item.product.title }}</h5>
-                <button type="button"
-                    class="btn btn-outline-warning btn-sm"
-                    @click="openDeleteModal(item)">
-                    <i class="bi bi-trash3"></i>
-                </button>
+              <div class="card-body">
+                <div class="d-flex justify-content-between align-items-start">
+                  <h5 class="card-title">{{ item.product.title }}</h5>
+                  <button type="button"
+                      class="btn btn-sm text-warning"
+                      @click="openDeleteModal(item)">
+                      <i class="bi bi-trash3"></i>
+                  </button>
                 </div>
                 <p class="card-text">單價 ${{ $filters.currency(item.product.price) }}</p>
-                <label for="qty" class="input-group input-group-sm">
-                <input type="number"
-                    min="1"
-                    :disabled = "cartLoadingItem === item.id"
-                    @change="updateCart(item)"
-                    id="qty"
-                    class="form-control"
-                    v-model.number="item.qty"/>
-                    <div class="input-group-text">/ {{ item.product.unit }}</div>
+                <label for="qty" class="input-group input-group-sm mb-3">
+                  <button class="btn btn-outline-warning" type="button"
+                    @click.prevent="checkQty(item, 'subtract')">
+                    <i class="bi bi-dash"></i>
+                  </button>
+                  <input type="text"
+                      id="qty"
+                      onfocus="this.blur()"
+                      class="form-control"
+                      v-model.number="item.qty"/>
+                  <div class="input-group-text">/ {{ item.product.unit }}</div>
+                  <button class="btn btn-outline-warning" type="button"
+                    @click.prevent="checkQty(item, 'add')">
+                    <i class="bi bi-plus"></i>
+                  </button>
                 </label>
-            </div>
+                <div class="d-flex justify-content-between">
+                  <strong class="d-block">${{ $filters.currency(item.total) }}</strong>
+                  <span v-if="message && itemId === item.id"
+                    class="text-danger">{{ message }}{{item.product.unit}}
+                  </span>
+                </div>
+              </div>
             </div>
         </div>
     </div>
@@ -112,17 +130,16 @@ export default {
   },
   props: ['progress'],
   computed: {
-    ...mapState(cartStore, ['cart']),
+    ...mapState(cartStore, ['cart', 'message', 'itemId']),
     ...mapState(statusStore, ['isLoading', 'cartLoadingItem', 'pushMessage']),
   },
   data() {
     return {
       tempItem: {},
-      // qty: 1,
     };
   },
   methods: {
-    ...mapActions(cartStore, ['getCart', 'updateCart', 'deleteCart', 'deleteItem']),
+    ...mapActions(cartStore, ['getCart', 'checkQty', 'deleteCart', 'deleteItem']),
 
     openDeleteModal(item) {
       this.tempItem = item;

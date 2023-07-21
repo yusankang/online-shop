@@ -8,6 +8,7 @@ const routes = [
   },
   {
     path: '/login',
+    name: 'login',
     component: () => import('../views/LogIn.vue'),
   },
   {
@@ -33,10 +34,6 @@ const routes = [
     component: () => import('../views/UserboardView.vue'),
     children: [
       {
-        path: 'home',
-        component: () => import('../views/HomePage.vue'),
-      },
-      {
         path: 'cart',
         component: () => import('../views/UserCart.vue'),
       },
@@ -58,15 +55,16 @@ const routes = [
       },
       {
         path: 'ordercomplete',
+        name: 'orderComplete',
         component: () => import('../views/UserOrderComplete.vue'),
       },
       {
-        path: 'recipes',
-        component: () => import('../views/UserRecipes.vue'),
+        path: 'ordersearch',
+        component: () => import('../views/UserOrderSearch.vue'),
       },
       {
-        path: 'favorites',
-        component: () => import('../views/UserFavorites.vue'),
+        path: 'about',
+        component: () => import('../views/UserAboutUs.vue'),
       },
     ],
   },

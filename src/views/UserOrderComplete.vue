@@ -1,25 +1,24 @@
 <template>
-    <Navbar></Navbar>
-    <div class="container pt-5">
-        <h3 class="text-white text-center pt-5 permanent-marker">Order Completed</h3>
-        <CartProgressBar :progressBar="progressBar"></CartProgressBar>
-        <div>
-            <h5 class="text-white text-center">Thank you!</h5>
-            <p class="text-white text-center">訂單完成</p>
-        </div>
+  <div class="container pt-5">
+      <h3 class="text-white text-center pt-5 permanent-marker">Thank you!</h3>
+      <CartProgressBar :progressBar="progressBar"></CartProgressBar>
+      <div class="d-flex flex-column align-items-center justify-content-center">
+        <h5 class="text-white my-5">付款完成</h5>
+        <router-link to="/"
+          class="btn btn-outline-warning text-white"
+          type="button">回去首頁
+        </router-link>
+      </div>
 
-    </div>
-    <Footer></Footer>
+  </div>
 </template>
 
 <script>
-import Navbar from '../components/UserNavbar.vue';
-import Footer from '../components/UserFooter.vue';
+import CartProgressBar from '../components/CartProgressBar.vue';
 
 export default {
   components: {
-    Navbar,
-    Footer,
+    CartProgressBar,
   },
   data() {
     return {

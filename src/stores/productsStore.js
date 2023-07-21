@@ -6,44 +6,64 @@ const status = statusStore();
 
 export default defineStore('productsStore', {
   state: () => ({
-    products: [],
+    allProducts: [],
+    filteredProducts: [],
+    displayProducts: [],
     product: {},
-    pagination: {},
-    category: 'all',
+    paginationLimit: 12,
+    category: '',
+    item: {},
   }),
-
-  getters: {
-
-  },
-
   actions: {
-    getProducts(category, page = 1) {
-      const api = `${process.env.VUE_APP_API}api/${process.env.VUE_APP_PATH}/products/?page=${page}`;
+    async getProducts() {
+      const api = `${process.env.VUE_APP_API}api/${process.env.VUE_APP_PATH}/products/all`;
       status.isLoading = true;
-      axios.get(api).then((response) => {
+      try {
+        const response = await axios.get(api);
         status.isLoading = false;
-        this.pagination = response.data.pagination;
-        const { products } = response.data;
-        this.filterCategory(category, products);
-        console.log('got all products');
-      });
-    },
-    filterCategory(category, products) {
-      this.products = products;
-      this.category = category;
-      if (this.category !== 'all') {
-        this.products = this.products.filter((item) => item.category === this.category);
-        console.log('filtered products by category');
+        this.allProducts = response.data.products;
+        this.filterCategory();
+      } catch (error) {
+        throw new Error(error);
       }
     },
-    getProduct(id) {
+    setCategory(category) {
+      localStorage.setItem('currentCategory', JSON.stringify(category));
+    },
+    filterCategory() {
+      this.category = JSON.parse(localStorage.getItem('currentCategory'));
+      if (this.category !== 'all' && this.category !== 'sale') {
+        this.filteredProducts = this.allProducts.filter((item) => item.category === this.category);
+      } else if (this.category === 'sale') {
+        this.filteredProducts = this.allProducts.filter((item) => item.origin_price > item.price);
+      } else {
+        this.filteredProducts = this.allProducts;
+      }
+      this.setCurrentPage(1);
+    },
+    setCurrentPage(page) {
+      this.displayProducts = [];
+      const prevRange = (page - 1) * this.paginationLimit;
+      const currRange = page * this.paginationLimit;
+      this.filteredProducts.forEach((item, index) => {
+        if (index >= prevRange && index < currRange) {
+          this.displayProducts.push(item);
+        }
+      });
+    },
+    async getProduct(id) {
       const api = `${process.env.VUE_APP_API}api/${process.env.VUE_APP_PATH}/product/${id}`;
       status.isLoading = true;
-      axios.get(api).then((response) => {
+      try {
+        const response = await axios.get(api);
         status.isLoading = false;
         this.product = response.data.product;
-        console.log('got product', this.product);
-      });
+      } catch (error) {
+        throw new Error(error);
+      }
+    },
+    scrollToTop() {
+      window.scrollTo({ top: 0, left: 0, behavior: 'smooth' });
     },
   },
 });

@@ -6,6 +6,7 @@ const status = statusStore();
 
 export default defineStore('orderStore', {
   state: () => ({
+    orders: [],
     orderIsPaid: false,
     orderId: '',
     order: {
@@ -17,19 +18,20 @@ export default defineStore('orderStore', {
     couponPercent: 100,
     subTotal: 0,
   }),
-
   actions: {
-    getOrder(orderId) {
+    async getOrder(orderId) {
       this.orderId = orderId;
       const api = `${process.env.VUE_APP_API}api/${process.env.VUE_APP_PATH}/order/${orderId}`;
       status.isLoading = true;
-      axios.get(api).then((response) => {
-        status.isLoading = false;
+      const response = await axios.get(api);
+      status.isLoading = false;
+      if (response.data.success) {
         this.order = response.data.order;
-        console.log(this.order);
         this.checkCouponCode();
         this.calcSubtotal();
-      });
+      } else if (!response.data.success) {
+        console.log('cannot get order');
+      }
     },
     checkCouponCode() {
       const item = this.order.products[Object.keys(this.order.products)[0]];
@@ -58,10 +60,13 @@ export default defineStore('orderStore', {
       status.isLoading = true;
       axios.post(api).then((response) => {
         status.isLoading = false;
+        const { message } = response.data;
         if (response.data.success) {
-          this.orderIsPaid = this.order.is_paid;
+          status.pushMessage({ title: message });
+          this.orderIsPaid = true;
+          this.router.push({ name: 'orderComplete' });
+          console.log('paid order');
         }
-        console.log('paid order');
       });
     },
   },

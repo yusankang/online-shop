@@ -4,7 +4,7 @@
   <div class="card-body border-0"
     v-if="cart.final_total > 0">
     <h5 class="text-center card-title mb-3">訂單價格</h5>
-    <table class="w-100">
+    <table class="w-100 mb-3">
       <tbody>
         <tr>
           <th>小計</th>
@@ -46,25 +46,32 @@
             class="text-end">${{ $filters.currency(cart.final_total + shippingFee) }} NTD
           </td>
         </tr>
-        <tr v-if="progress === 1">
+        <tr v-if="progress === 1 && !isUseCoupon">
           <td colspan="2">
             <div class="input-group my-3">
               <input type="text"
+                id="couponInput"
                 class="form-control"
                 placeholder="輸入優惠碼"
+                maxlength="20"
                 aria-label="Coupon code"
                 aria-describedby="coupon-button"
-                v-model="couponCodeInput">
+                v-model="couponCodeInput"
+                @keyup.enter="$event.target.blur()"
+                @keydown.enter="addCouponCode(couponCodeInput)"
+                @focus="clearMessage"
+                autocomplete="off">
               <button class="btn btn-outline-secondary"
-                v-if="!isUseCoupon"
                 type="button"
                 id="coupon-button"
                 @click="addCouponCode(couponCodeInput)">套用優惠碼</button>
             </div>
+            <span v-if="couponMessage" class="text-danger">{{ couponMessage }}</span>
           </td>
         </tr>
       </tfoot>
     </table>
+    <p class="text-center">訂單滿$2,000免運！</p>
     <div class="d-grid" v-if="progress === 1">
       <router-link to="/user/orderform" class="btn btn-warning">結帳</router-link>
     </div>
@@ -75,14 +82,12 @@
 import { mapState, mapActions } from 'pinia';
 import cartStore from '@/stores/cartStore';
 import statusStore from '@/stores/statusStore';
-import orderStore from '@/stores/orderStore';
 
 export default {
   props: ['progress'],
   computed: {
-    ...mapState(cartStore, ['cart', 'isUseCoupon', 'couponPercent', 'couponCode', 'shippingFee']),
+    ...mapState(cartStore, ['cart', 'isUseCoupon', 'couponPercent', 'couponCode', 'couponMessage', 'shippingFee']),
     ...mapState(statusStore, ['isLoading', 'cartLoadingItem', 'pushMessage']),
-    ...mapState(orderStore, ['order']),
   },
   data() {
     return {
@@ -90,7 +95,7 @@ export default {
     };
   },
   methods: {
-    ...mapActions(cartStore, ['getCart', 'addCouponCode']),
+    ...mapActions(cartStore, ['getCart', 'addCouponCode', 'clearMessage']),
   },
 };
 </script>

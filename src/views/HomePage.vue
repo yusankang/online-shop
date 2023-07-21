@@ -1,40 +1,34 @@
 <!-- eslint-disable vuejs-accessibility/anchor-has-content -->
 <template>
-<Navbar></Navbar>
-  <header class="homepage-header header-img d-flex align-items-center justify-content-center">
-    <div>
-      <h2 class="text-white text-center display-3 permanent-marker">Wilderness kitchen</h2>
-      <div class="d-grid gap-2 col-5 mx-auto my-3">
-        <button class="btn btn-light"
-          type="button">Start shopping</button>
+  <div style="background-color: rgba(42,62,51,.8); min-height: 100vh;">
+    <Navbar></Navbar>
+    <header class="homepage-header header-img d-flex align-items-center justify-content-center">
+      <div>
+        <h2 class="text-white text-center display-3 permanent-marker">Wilderness kitchen</h2>
+        <div class="d-grid gap-2 col-5 mx-auto my-3">
+          <button class="btn btn-light"
+            @click.prevent="goToProductCategory('all')">
+            Start shopping
+          </button>
+        </div>
       </div>
-    </div>
-  </header>
-  <!-- <header class="header">
-    <div class="header-text">
-      <div>Wilderness Kitchen</div>
-      <div><span>在大自然中享受美食</span></div>
-    </div>
-    <Carousel :images="this.images"></Carousel>
-  </header> -->
+    </header>
 
-  <div style="background-color: rgba(42,62,51,.8)">
     <section class="py-5">
       <div class="mb-5 mx-md-auto px-5 px-md-0 col-12 col-md-6">
-        <p class="text-white">Lorem ipsum dolor sit amet consectetur adipisicing elit.
-          Dolorem voluptate ipsa eligendi in illo repellendus eveniet
-          suscipit blanditiis vero voluptatum. Quisquam, maxime culpa
-          exercitationem suscipit mollitia delectus eum accusamus.
-          Dolorum inventore dolore ut expedita quasi repellat, beatae
-          natus excepturi doloremque ab aspernatur sit enim harum,
-          alias praesentium saepe vel? Et.</p>
+        <h5 class="text-white text-center">Love Nature x Love Food</h5>
+        <p class="text-white text-center">
+          There's nothing like enjoying good food in the great outdoors.
+          At Wilderness Kitchen, take your kitchen with you anywhere.
+          Let nature be your inspiration.
+        </p>
       </div>
 
-<!-- product menu -->
+      <!-- product menu -->
       <div class="row my-4 g-0">
-        <div class="col-12 col-md-6 product-menu"
+        <div class="col-12 col-md-4 product-menu"
           v-for="item in productMenu" :key="item.title">
-          <a href="#">
+          <a href="#" @click.prevent="goToProductCategory(item.category)">
             <div class="menu-item">
               <div class="menu-img">
                 <img :src="require(`../assets/images/${item.imgUrl}`)"
@@ -42,61 +36,60 @@
                 <span class="color-overlay"
                   :style="`background-color: ${item.backgroundColor}`"></span>
               </div>
-              <div class="menu-text d-flex align-items-center hvr-forward">
+              <div class="menu-text d-flex flex-column hvr-forward">
                 <h5 class="m-0 fs-4">{{item.title}}</h5>
-                <h5 class="m-0 fs-3 ms-2 permanent-marker">{{item.titleEng}}</h5>
-                  <i class="bi bi-arrow-right-short fs-2 mt-2 ms-2"></i>
+                <h5 class="m-0 fs-3 permanent-marker">{{item.titleEng}}</h5>
+                  <i class="bi bi-arrow-right-short fs-2 mt-2"></i>
               </div>
             </div>
           </a>
         </div>
       </div>
     </section>
+    <h2 class="text-white mb-4 text-center permanent-marker">SALE</h2>
     <h2 class="text-white mb-4 text-center">特價熱賣</h2>
-    <SwiperSlider></SwiperSlider>
+    <SwiperSlider :category="'sale'"></SwiperSlider>
     <div class="d-flex justify-content-end">
-      <button class="btn btn-outline-light btn-sm me-5">看更多</button>
+      <button class="btn btn-outline-light btn-sm me-5"
+        @click.prevent="goToProductCategory('sale')">看更多
+      </button>
     </div>
-
     <Footer></Footer>
   </div>
-
 </template>
 
 <script>
-// import Carousel from '@/components/CarouselComponent.vue';
-import Navbar from '../components/UserNavbar.vue';
+import { mapState, mapActions } from 'pinia';
+import productsStore from '@/stores/productsStore';
 import SwiperSlider from '../components/SwiperSlider.vue';
+import Navbar from '../components/UserNavbar.vue';
 import Footer from '../components/UserFooter.vue';
 
 export default {
   name: 'HomePage',
   components: {
-    Navbar,
     SwiperSlider,
+    Navbar,
     Footer,
   },
-  mixins: [],
+  computed: {
+    ...mapState(productsStore, ['category']),
+  },
   data() {
     return {
       productMenu: [
         {
           title: '戶外廚具',
           titleEng: 'Cookware',
+          category: '廚具',
           imgUrl: 'layout-images/menu-image-cookware.jpg',
           height: 150,
           backgroundColor: 'rgba(42,62,51)',
         },
         {
-          title: '戶外餐具',
-          titleEng: 'Tableware',
-          imgUrl: 'layout-images/menu-image-tableware.jpg',
-          height: 150,
-          backgroundColor: 'rgba(60,97,106)',
-        },
-        {
           title: '咖啡系列',
           titleEng: 'Coffee Gear',
+          category: '咖啡',
           imgUrl: 'layout-images/menu-image-coffee.jpg',
           height: 150,
           backgroundColor: 'rgba(111,66,37)',
@@ -104,6 +97,7 @@ export default {
         {
           title: '野餐系列',
           titleEng: 'Picnic Gear',
+          category: '野餐',
           imgUrl: 'layout-images/menu-image-picnic.jpg',
           height: 150,
           backgroundColor: 'rgba(188,121,53)',
@@ -111,8 +105,16 @@ export default {
       ],
     };
   },
+  methods: {
+    ...mapActions(productsStore, ['setCategory', 'scrollToTop']),
+
+    goToProductCategory(category) {
+      this.setCategory(category);
+      this.$router.push('/user/products');
+    },
+  },
   created() {
-    console.log(process.env.VUE_APP_API, process.env.VUE_APP_PATH);
+    this.scrollToTop();
   },
 };
 </script>

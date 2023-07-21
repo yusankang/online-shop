@@ -5,6 +5,7 @@ export default defineStore('statusStore', {
     isLoading: false,
     cartLoadingItem: '',
     messages: [],
+    activeLink: '',
   }),
   actions: {
     pushMessage(data) {

@@ -1,31 +1,4 @@
-// .progress-item::before {
-//     position: absolute;
-//     content: "";
-//     border-bottom: 2px solid #ccc;
-//     width: 100%;
-//     top: 17px;
-//     left: -100%;
-//     z-index: 2;
-//   }
-
-//   .progress-item::after {
-//     position: absolute;
-//     content: "";
-//     border-bottom: 2px solid #ccc;
-//     width: 100%;
-//     top: 17px;
-//     left: 100%;
-//     z-index: 2;
-//   }
-
-//   .progress-item:first-child::before {
-//     content: none;
-//   }
-//   .progress-item:last-child::after {
-//     content: none;
-//   }
-
-.progress-wrapper {
+  .progress-wrapper {
     margin-top: auto;
     display: flex;
     justify-content: space-between;
