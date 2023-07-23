@@ -16,7 +16,7 @@
               aria-label="Toggle navigation">
               <span class="navbar-toggler-icon"></span>
             </button>
-            <div class="collapse navbar-collapse" id="navbarNav" ref="collapse">
+            <div class="collapse navbar-collapse" id="navbarNav" ref="navbarCollapse">
                 <ul class="navbar-nav ms-auto">
                     <li class="nav-item mx-3">
                         <router-link to="/user/products"
@@ -130,15 +130,15 @@ export default {
     updateScreenWidth() {
       this.screenWidth = window.innerWidth;
       if (this.screenWidth >= 768) {
-        this.collapseOpen = false;
         this.collapse.hide();
+        this.collapseOpen = false;
         this.changeNavBg();
       } else if (this.screenWidth < 768) {
         this.updateCollapseState();
       }
     },
     updateCollapseState() {
-      const navbarCollapse = this.$refs.collapse;
+      const { navbarCollapse } = this.$refs;
       if (navbarCollapse) {
         navbarCollapse.addEventListener('show.bs.collapse', () => {
           this.collapseOpen = true;
@@ -160,8 +160,8 @@ export default {
     },
   },
   mounted() {
+    this.collapse = new Collapse(this.$refs.navbarCollapse);
     window.addEventListener('scroll', this.changeNavBg);
-    this.collapse = new Collapse(this.$refs.collapse);
     this.updateScreenWidth();
     this.onScreenResize();
   },

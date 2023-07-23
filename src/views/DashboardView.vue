@@ -7,8 +7,6 @@
 </template>
 
 <script>
-import emitter from '@/methods/emitter';
-// import pushMessageState from '@/methods/pushMessageState';
 import ToastMessages from '../components/ToastMessages.vue';
 import Navbar from '../components/DashboardNavbar.vue';
 
@@ -16,12 +14,6 @@ export default {
   components: {
     Navbar,
     ToastMessages,
-  },
-  provide() {
-    return {
-      emitter,
-      // pushMessageState,
-    };
   },
   created() {
     const token = document.cookie.replace(/(?:(?:^|.*;\s*)hexToken\s*=\s*([^;]*).*$)|^.*$/, '$1');

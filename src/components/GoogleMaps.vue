@@ -15,7 +15,7 @@ export default {
   },
   data() {
     return {
-      apiKey: 'AIzaSyAaImbcyil3xymSYv9KKDZm3TSuHN_Z6r4',
+      apiKey: process.env.VUE_APP_GOOGLE_MAP_API,
       lat: 25.014446148261754,
       lng: 121.46735576904118,
     };

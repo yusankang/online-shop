@@ -9,23 +9,15 @@
 </template>
 
 <script>
-import emitter from '@/methods/emitter';
 import ToastMessages from '@/components/ToastMessages.vue';
 import Navbar from '@/components/UserNavbar.vue';
 import Footer from '@/components/UserFooter.vue';
-// import pushMessageState from '@/methods/pushMessageState';
 
 export default {
   components: {
     Navbar,
     Footer,
     ToastMessages,
-  },
-  provide() {
-    return {
-      emitter,
-      // pushMessageState,
-    };
   },
   created() {
   },
