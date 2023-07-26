@@ -17,6 +17,9 @@ export default defineStore('orderStore', {
     couponCode: '',
     couponPercent: 100,
     subTotal: 0,
+    creditNumError: false,
+    cvvNumError: false,
+    accNumError: false,
   }),
   actions: {
     async getOrder(orderId) {
@@ -30,7 +33,7 @@ export default defineStore('orderStore', {
         this.checkCouponCode();
         this.calcSubtotal();
       } else if (!response.data.success) {
-        console.log('cannot get order');
+        console.log('沒有訂單資料');
       }
     },
     checkCouponCode() {
@@ -44,8 +47,6 @@ export default defineStore('orderStore', {
         this.couponCode = '';
         this.couponPercent = 100;
       }
-      console.log('checked coupon code');
-      console.log(this.couponPercent, this.isUseCoupon);
     },
     calcSubtotal() {
       let subTotal = 0;
@@ -53,7 +54,6 @@ export default defineStore('orderStore', {
         subTotal += this.order.products[key].total;
       });
       this.subTotal = subTotal;
-      console.log('calculated subtotal');
     },
     payOrder() {
       const api = `${process.env.VUE_APP_API}api/${process.env.VUE_APP_PATH}/pay/${this.orderId}`;
@@ -65,9 +65,30 @@ export default defineStore('orderStore', {
           status.pushMessage({ title: message });
           this.orderIsPaid = true;
           this.router.push({ name: 'orderComplete' });
-          console.log('paid order');
+        } else if (!response.data.success) {
+          status.pushMessage({ title: message, style: 'danger' });
         }
       });
+    },
+    checkCreditNum(numLength) {
+      if (numLength < 16 && numLength >= 1) {
+        this.creditNumError = true;
+      }
+    },
+    checkCvvNum(numLength) {
+      if (numLength < 3 && numLength >= 1) {
+        this.cvvNumError = true;
+      }
+    },
+    checkAccNum(numLength) {
+      if (numLength < 5 && numLength >= 1) {
+        this.accNumError = true;
+      }
+    },
+    clearErrorMessage() {
+      this.creditNumError = false;
+      this.cvvNumError = false;
+      this.accNumError = false;
     },
   },
 });

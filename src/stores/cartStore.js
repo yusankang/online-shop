@@ -55,10 +55,9 @@ export default defineStore('cartStore', {
         product_id: item.product.id,
         qty: qtyNum,
       };
-      axios.put(api, { data: cart }).then((response) => {
+      axios.put(api, { data: cart }).then(() => {
         status.isLoading = false;
         status.cartLoadingItem = '';
-        console.log(response);
         this.getCart();
       })
         .catch((response) => {
@@ -73,10 +72,9 @@ export default defineStore('cartStore', {
         qty: 1,
       };
       cart.qty = qty;
-      axios.post(api, { data: cart }).then((response) => {
+      axios.post(api, { data: cart }).then(() => {
         status.cartLoadingItem = '';
         status.pushMessage({ title: '加入購物車' });
-        console.log('added to cart', response);
         if (this.isUseCoupon) {
           this.addCouponCode(this.couponCode);
         }
@@ -90,14 +88,15 @@ export default defineStore('cartStore', {
       const api = `${process.env.VUE_APP_API}api/${process.env.VUE_APP_PATH}/cart/${selectedItem.id}`;
       status.isLoading = true;
       axios.delete(api).then((response) => {
+        const { message } = response.data;
         status.isLoading = false;
-        status.pushMessage({ title: '刪除品項' });
-        console.log('deleted item', response);
-        this.getCart();
-      })
-        .catch((response) => {
-          throw new Error(response.data.message);
-        });
+        if (response.data.success) {
+          status.pushMessage({ title: '刪除品項' });
+          this.getCart();
+        } else if (!response.data.success) {
+          status.pushMessage({ title: message, style: 'danger' });
+        }
+      });
     },
     deleteCart() {
       const api = `${process.env.VUE_APP_API}api/${process.env.VUE_APP_PATH}/carts`;
@@ -109,13 +108,10 @@ export default defineStore('cartStore', {
         if (response.data.success) {
           status.pushMessage({ title: `購物車${message}` });
           this.getCart();
-        } else {
-          status.pushMessage({ title: message });
+        } else if (!response.data.success) {
+          status.pushMessage({ title: message, style: 'danger' });
         }
-      })
-        .catch((response) => {
-          throw new Error(response.data.message);
-        });
+      });
     },
     addCouponCode(couponCodeInput) {
       if (couponCodeInput === '') {
@@ -134,10 +130,7 @@ export default defineStore('cartStore', {
           } else if (!response.data.success) {
             this.couponMessage = response.data.message;
           }
-        })
-          .catch((response) => {
-            throw new Error(response.data.message);
-          });
+        });
       }
     },
     clearMessage() {

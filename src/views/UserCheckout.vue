@@ -157,7 +157,7 @@ export default {
   async created() {
     const { orderId } = this.$route.params;
     await this.getOrder(orderId);
-    await this.getCart();
+    this.getCart();
     this.isPaid();
     this.scrollToTop();
   },

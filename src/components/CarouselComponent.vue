@@ -39,10 +39,9 @@ export default {
   props: ['product'],
   mounted() {
     const carouselEl = this.$refs.carousel;
-    const carousel = new Carousel(carouselEl, {
-      interval: 5000,
+    this.carousel = new Carousel(carouselEl, {
+      interval: 4000,
     });
-    console.log(carousel);
   },
 };
 </script>

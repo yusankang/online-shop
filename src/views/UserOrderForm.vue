@@ -102,7 +102,6 @@ export default {
     ...mapActions(statusStore, ['pushMessage']),
     ...mapActions(productsStore, ['scrollToTop']),
     createOrder() {
-      console.log('creating order for', this.form.user);
       const api = `${process.env.VUE_APP_API}api/${process.env.VUE_APP_PATH}/order`;
       const order = this.form;
       this.isLoading = true;

@@ -17,7 +17,7 @@
       </div>
     </div>
 
-  <Form @submit="payOrder" v-slot="{ errors }"
+  <Form @submit="checkPayment" v-slot="{ errors }"
     v-if="payment === 'credit'">
     <div class="mb-3">
       <label class="form-label" for="cardNumber">信用卡號碼</label>
@@ -25,10 +25,13 @@
         name="信用卡號碼" maxlength="19"
         autocomplete="off"
         oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*)\./g, '$1');"
+        @blur="checkCreditNum(customerCardInfo.realCardNumber.length)"
+        @focus="clearErrorMessage()"
         v-model="cardNumber" placeholder="0000 0000 0000 0000"
         :class="{ 'is-invalid': errors['信用卡號碼'] }"
         rules="required"></Field>
         <ErrorMessage name="信用卡號碼" class="invalid-feedback"></ErrorMessage>
+        <span v-if="creditNumError" class="text-danger" style="font-size: 14px;">信用卡卡號有誤！</span>
     </div>
     <div class="mb-3">
       <label class="form-label" for="cardName">信用卡姓名</label>
@@ -70,12 +73,16 @@
       <div class="col-3">
         <label for="cardCvv" class="form-label">CVV</label>
         <Field type="text" name="CVV號碼" id="cardCvv"
-          class="form-control" maxlength="3" v-model="customerCardInfo.cardCvv"
+          class="form-control" maxlength="3" minlength="3"
+          v-model="customerCardInfo.cardCvv"
           placeholder="000"
+          @blur="checkCvvNum(customerCardInfo.cardCvv.length)"
+          @focus="clearErrorMessage()"
           oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*)\./g, '$1');"
           :class="{ 'is-invalid':errors['CVV號碼'] }"
           rules="required"></Field>
         <ErrorMessage name="CVV號碼" class="invalid-feedback"></ErrorMessage>
+        <span v-if="cvvNumError" class="text-danger" style="font-size: 14px;">CVV號碼有誤！</span>
       </div>
     </div>
     <div class="mb-3">
@@ -83,7 +90,7 @@
     </div>
   </Form>
 
-  <Form @submit="payOrder" v-slot="{ errors }"
+  <Form @submit="checkPayment" v-slot="{ errors }"
     v-if="payment === 'atm'">
     <div class="mb-3">
       <p>請匯款到以下帳號</p>
@@ -114,10 +121,14 @@
       <Field type="text" name="帳號末五碼" class="form-control" id="paymentAcc"
         placeholder="00000" maxlength="5"
         v-model="customerAccInfo.paymentAcc"
+        @blur="checkAccNum(customerAccInfo.paymentAcc.length)"
+        @focus="clearErrorMessage()"
+        autocomplete="off"
         oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*)\./g, '$1');"
         :class="{ 'is-invalid': errors['帳號末五碼'] }"
         rules="required"></Field>
         <ErrorMessage name="帳號末五碼" class="invalid-feedback"></ErrorMessage>
+        <span v-if="accNumError" class="text-danger" style="font-size: 14px;">帳號號碼有誤！</span>
     </div>
     <div class="mb-3">
         <button class="btn btn-warning w-100">通知已匯款</button>
@@ -131,28 +142,9 @@ import orderStore from '@/stores/orderStore';
 import statusStore from '@/stores/statusStore';
 
 export default {
-  components: {
-  },
   computed: {
-    ...mapState(orderStore, ['order', 'orderIsPaid']),
+    ...mapState(orderStore, ['order', 'orderIsPaid', 'creditNumError', 'cvvNumError', 'accNumError']),
     ...mapState(statusStore, ['isLoading']),
-  },
-
-  watch: {
-    cardNumber() {
-      const realNumber = this.cardNumber.replace(/ /gi, '');
-      const formattedNumber = realNumber.match(/.{1,4}/g);
-      this.cardNumber = formattedNumber.join(' ');
-      this.customerCardInfo.realCardNumber = realNumber;
-    },
-  },
-  methods: {
-    ...mapActions(orderStore, ['payOrder']),
-
-    paymentMethod(event) {
-      const paymentMethod = event.target.value;
-      this.payment = paymentMethod;
-    },
   },
   data() {
     return {
@@ -170,6 +162,38 @@ export default {
       },
       minCardYear: new Date().getFullYear(),
     };
+  },
+  watch: {
+    cardNumber() {
+      this.customerCardInfo.realCardNumber = this.cardNumber.replace(/ /gi, '');
+      const formattedNumber = this.customerCardInfo.realCardNumber.match(/.{1,4}/g);
+      if (this.customerCardInfo.realCardNumber !== '' && formattedNumber !== []) {
+        this.cardNumber = formattedNumber.join(' ');
+      }
+    },
+  },
+  methods: {
+    ...mapActions(orderStore, ['payOrder', 'checkCreditNum', 'checkCvvNum', 'checkAccNum', 'clearErrorMessage']),
+
+    checkPayment() {
+      if (this.payment === 'credit') {
+        this.checkCreditNum(this.customerCardInfo.realCardNumber.length);
+        this.checkCvvNum(this.customerCardInfo.cardCvv.length);
+        if (this.creditNumError === false && this.cvvNumError === false) {
+          this.payOrder();
+        }
+      } else if (this.payment === 'atm') {
+        console.log('checking acc num');
+        this.checkAccNum(this.customerAccInfo.paymentAcc.length);
+        if (this.accNumError === false) {
+          this.payOrder();
+        }
+      }
+    },
+    paymentMethod(event) {
+      const paymentMethod = event.target.value;
+      this.payment = paymentMethod;
+    },
   },
 };
 </script>

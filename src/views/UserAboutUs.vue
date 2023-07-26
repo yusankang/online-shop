@@ -1,18 +1,22 @@
 <template>
     <header class="about-header header-img mb-5 d-flex align-items-center">
-        <div class="row d-flex align-items-center">
-            <div class="col-md-6 text-center text-md-end p-4">
-                <h2 class="text-white permanent-marker display-3">
+        <div class="row d-flex align-items-center pt-5 w-100">
+            <div class="col-md-6 text-center text-md-end px-4">
+                <h2 class="text-white permanent-marker display-3 mb-3">
                     About Wilderness Kitchen
                 </h2>
             </div>
             <div class="col-md-6 text-center text-md-start">
-                <div class="bg-none text-white p-4">
+                <div class="text-white px-4">
                     <p>關於我們</p>
-                    <p>Lorem ipsum dolor sit amet consectetur nulla<br>
-                    adipisicing elit. Amet cumque tenetur laudantium<br>
-                    consequatur commodi id eius, eligendi omnis? Alias, nulla.<br>
-                    Adipisicing elit. Amet cumque tenetur laudantium.
+                    <p style="font-size: 14px;">
+                        野生廚房創辦人來自紐西蘭<br>
+                        品牌概念結合了紐西蘭戶外生活美學和對於廚藝的熱愛<br>
+                        一邊望著星空和家人圍繞著營火烤棉花糖<br>
+                        或在大草原中和朋友享用野餐<br>
+                        在大自然自己親手下廚是生活中一定要體驗的享受<br>
+                        無論是露營、BBQ還是戶外聚餐<br>
+                        野生廚房是你的好夥伴
                     </p>
                 </div>
             </div>

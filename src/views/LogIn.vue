@@ -69,7 +69,6 @@ export default {
       });
     },
     clearMessage() {
-      console.log('hello');
       this.message = '';
     },
   },

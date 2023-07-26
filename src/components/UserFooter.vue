@@ -3,7 +3,9 @@
     <footer class="mt-auto">
         <div class="d-flex mt-5 justify-content-between border-top border-2
             pt-3 pb-4 px-2 px-md-5 align-items-center">
-            <h6 class="fs-6 text-white m-0">All rights reserved</h6>
+            <h6 class="text-white m-0" style="font-size: 14px;">
+                All rights reserved | Icon by Freepik
+            </h6>
             <div>
                 <a href="#" class="me-3 hvr-grow text-white"
                     @click.prevent>

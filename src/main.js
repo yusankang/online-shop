@@ -30,6 +30,7 @@ setLocale('zh_TW');
 
 const pinia = createPinia();
 const app = createApp(App);
+
 app.config.globalProperties.$filters = {
   currency,
   date,
