@@ -27,10 +27,7 @@ export default defineStore('dashboardStore', {
         } else if (!response.data.success) {
           status.pushMessage({ title: message, style: 'danger' });
         }
-      })
-        .catch((error) => {
-          throw new Error(error);
-        });
+      });
     },
     getCoupons() {
       status.isLoading = true;

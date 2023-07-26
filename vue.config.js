@@ -5,6 +5,10 @@ module.exports = defineConfig({
 });
 
 module.exports = {
+  publicPath: '/yusankang/dist',
+};
+
+module.exports = {
   chainWebpack: (config) => {
     config.module
       .rule('vue')
