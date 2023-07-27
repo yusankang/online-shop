@@ -54,6 +54,18 @@
         @click.prevent="goToProductCategory('sale')">看更多
       </button>
     </div>
+    <div class="alert bg-white alert-dismissible fade show p-3 mx-auto fixed-bottom my-1
+      blinking"
+      role="alert" ref="saleAlert" style="width: 300px;">
+      夏季全店特價7折優惠碼 'summer7'
+      <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    </div>
+    <!-- <div class="bg-dark py-3 px-2 mx-auto my-1 rounded fixed-bottom text-center text-white
+      alert-dismissible"
+      style="width: 300px;" ref="saleAlert">
+      夏季全店特價7折優惠碼 'summer7'
+      <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    </div> -->
     <Footer></Footer>
   </div>
 </template>
@@ -61,6 +73,7 @@
 <script>
 import { mapState, mapActions } from 'pinia';
 import productsStore from '@/stores/productsStore';
+import Alert from 'bootstrap/js/dist/alert';
 import SwiperSlider from '../components/SwiperSlider.vue';
 import Navbar from '../components/UserNavbar.vue';
 import Footer from '../components/UserFooter.vue';
@@ -115,6 +128,9 @@ export default {
   },
   created() {
     this.scrollToTop();
+  },
+  mounted() {
+    this.alert = new Alert(this.$refs.saleAlert);
   },
 };
 </script>

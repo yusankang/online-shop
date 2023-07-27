@@ -23,8 +23,8 @@ export default defineStore('productsStore', {
         status.isLoading = false;
         this.allProducts = response.data.products;
         this.filterCategory();
-      } catch (response) {
-        throw new Error(response.data.message);
+      } catch (error) {
+        throw new Error(error);
       }
     },
     setCategory(category) {
@@ -58,8 +58,8 @@ export default defineStore('productsStore', {
         const response = await axios.get(api);
         status.isLoading = false;
         this.product = response.data.product;
-      } catch (response) {
-        throw new Error(response.data.message);
+      } catch (error) {
+        throw new Error(error);
       }
     },
     scrollToTop() {

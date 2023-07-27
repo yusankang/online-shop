@@ -100,7 +100,6 @@ export default {
   methods: {
     ...mapActions(productsStore, ['getProducts', 'setCategory']),
     getProduct(id) {
-      console.log('clicked product', id);
       this.$router.push(`/user/product/${id}`);
       this.$emit('productId', id);
     },

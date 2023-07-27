@@ -25,8 +25,8 @@ export default defineStore('cartStore', {
         this.checkCouponCode();
         localStorage.setItem('cart', JSON.stringify(this.cart));
       })
-        .catch((response) => {
-          throw new Error(response.data.message);
+        .catch((error) => {
+          throw new Error(error);
         });
     },
     checkQty(item, action) {
@@ -60,8 +60,8 @@ export default defineStore('cartStore', {
         status.cartLoadingItem = '';
         this.getCart();
       })
-        .catch((response) => {
-          throw new Error(response.data.message);
+        .catch((error) => {
+          throw new Error(error);
         });
     },
     addCart(id, qty) {
@@ -80,8 +80,8 @@ export default defineStore('cartStore', {
         }
         this.getCart();
       })
-        .catch((response) => {
-          throw new Error(response.data.message);
+        .catch((error) => {
+          throw new Error(error);
         });
     },
     deleteItem(selectedItem) {
