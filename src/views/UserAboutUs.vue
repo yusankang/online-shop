@@ -3,7 +3,7 @@
         <div class="row d-flex align-items-center pt-5 w-100">
             <div class="col-md-6 text-center text-md-end px-4">
                 <h2 class="text-white permanent-marker display-3 mb-3">
-                    About Wilderness Kitchen
+                    About<br>Wilderness<br>Kitchen
                 </h2>
             </div>
             <div class="col-md-6 text-center text-md-start">
