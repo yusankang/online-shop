@@ -183,7 +183,6 @@ export default {
           this.payOrder();
         }
       } else if (this.payment === 'atm') {
-        console.log('checking acc num');
         this.checkAccNum(this.customerAccInfo.paymentAcc.length);
         if (this.accNumError === false) {
           this.payOrder();

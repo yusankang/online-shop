@@ -20,6 +20,8 @@ export default defineStore('orderStore', {
     creditNumError: false,
     cvvNumError: false,
     accNumError: false,
+    searchMessage: false,
+    orderFound: false,
   }),
   actions: {
     async getOrder(orderId) {
@@ -28,12 +30,12 @@ export default defineStore('orderStore', {
       status.isLoading = true;
       const response = await axios.get(api);
       status.isLoading = false;
-      if (response.data.success) {
+      if (response.data.success && response.data.order !== null) {
         this.order = response.data.order;
         this.checkCouponCode();
         this.calcSubtotal();
-      } else if (!response.data.success) {
-        console.log('沒有訂單資料');
+      } else if (response.data.order === null) {
+        this.searchMessage = true;
       }
     },
     checkCouponCode() {
@@ -89,6 +91,9 @@ export default defineStore('orderStore', {
       this.creditNumError = false;
       this.cvvNumError = false;
       this.accNumError = false;
+    },
+    clearSearchMessage() {
+      this.searchMessage = false;
     },
   },
 });
