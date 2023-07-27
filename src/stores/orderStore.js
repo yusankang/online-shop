@@ -21,7 +21,6 @@ export default defineStore('orderStore', {
     cvvNumError: false,
     accNumError: false,
     searchMessage: false,
-    orderFound: false,
   }),
   actions: {
     async getOrder(orderId) {
