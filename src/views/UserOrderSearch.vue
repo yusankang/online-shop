@@ -28,7 +28,7 @@ import orderStore from '@/stores/orderStore';
 
 export default {
   computed: {
-    ...mapState(orderStore, ['searchMessage', 'orderFound', 'order']),
+    ...mapState(orderStore, ['searchMessage', 'order']),
   },
   watch: {
     order() {
