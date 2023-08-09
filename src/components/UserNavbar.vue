@@ -160,7 +160,8 @@ export default {
     },
   },
   mounted() {
-    this.collapse = new Collapse(this.$refs.navbarCollapse);
+    // eslint-disable-next-line no-new
+    this.collapse = new Collapse(this.$refs.navbarCollapse, { toggle: false });
     window.addEventListener('scroll', this.changeNavBg);
     this.updateScreenWidth();
     this.onScreenResize();
