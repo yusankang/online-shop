@@ -60,12 +60,6 @@
       夏季全店特價7折優惠碼 'summer7'
       <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
     </div>
-    <!-- <div class="bg-dark py-3 px-2 mx-auto my-1 rounded fixed-bottom text-center text-white
-      alert-dismissible"
-      style="width: 300px;" ref="saleAlert">
-      夏季全店特價7折優惠碼 'summer7'
-      <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-    </div> -->
     <Footer></Footer>
   </div>
 </template>
