@@ -170,7 +170,11 @@ export default {
     window.removeEventListener('scroll', this.changeNavBg);
   },
   created() {
-    this.currentCart = JSON.parse(localStorage.getItem('cart'));
+    if (localStorage.getItem('cart') !== null) {
+      this.currentCart = JSON.parse(localStorage.getItem('cart'));
+    } else {
+      this.currentCart = { carts: [] };
+    }
   },
 };
 </script>
