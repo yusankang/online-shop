@@ -1,0 +1,18 @@
+@import "~bootstrap/scss/functions";
+
+@import "./helpers/variables";
+@import "~bootstrap/scss/variables-dark";
+
+@import "~bootstrap/scss/maps";
+@import "~bootstrap/scss/mixins";
+@import "~bootstrap/scss/root";
+
+@import "~bootstrap/scss/bootstrap";
+
+//custom
+@import "./components/header";
+@import "./components/product-menu";
+@import "./components/swiper-slider";
+@import "./components/cart-progress-bar";
+@import "./components/user-navbar";
+@import "./components/sale-alert";

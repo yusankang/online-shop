@@ -27,7 +27,10 @@ export default defineStore('dashboardStore', {
         } else if (!response.data.success) {
           status.pushMessage({ title: message, style: 'danger' });
         }
-      });
+      })
+        .catch((error) => {
+          throw new Error(error);
+        });
     },
     getCoupons() {
       status.isLoading = true;
@@ -40,7 +43,10 @@ export default defineStore('dashboardStore', {
         } else if (!response.data.success) {
           status.pushMessage({ title: message, style: 'danger' });
         }
-      });
+      })
+        .catch((error) => {
+          throw new Error(error);
+        });
     },
     getOrders(page = 1) {
       const api = `${process.env.VUE_APP_API}api/${process.env.VUE_APP_PATH}/admin/orders/?page=${page}`;
@@ -54,7 +60,10 @@ export default defineStore('dashboardStore', {
         } else if (!response.data.success) {
           status.pushMessage({ title: message, style: 'danger' });
         }
-      });
+      })
+        .catch((error) => {
+          throw new Error(error);
+        });
     },
     deleteItem(type, api) {
       status.isLoading = true;
@@ -73,7 +82,10 @@ export default defineStore('dashboardStore', {
         } else if (!response.data.success) {
           status.pushMessage({ title: message, style: 'danger' });
         }
-      });
+      })
+        .catch((error) => {
+          throw new Error(error);
+        });
     },
     sendUpdate(type, api, httpMethod, item) {
       status.isLoading = true;
@@ -92,7 +104,10 @@ export default defineStore('dashboardStore', {
         } else if (!response.data.success) {
           status.pushMessage({ title: message, style: 'danger' });
         }
-      });
+      })
+        .catch((error) => {
+          throw new Error(error);
+        });
     },
     onScreenResize() {
       window.addEventListener('resize', () => {

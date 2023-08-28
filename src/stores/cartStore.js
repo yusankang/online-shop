@@ -60,8 +60,8 @@ export default defineStore('cartStore', {
         status.cartLoadingItem = '';
         this.getCart();
       })
-        .catch((error) => {
-          throw new Error(error);
+        .catch((response) => {
+          throw new Error(response.data.message);
         });
     },
     addCart(id, qty) {
@@ -80,8 +80,8 @@ export default defineStore('cartStore', {
         }
         this.getCart();
       })
-        .catch((error) => {
-          throw new Error(error);
+        .catch((response) => {
+          throw new Error(response.data.message);
         });
     },
     deleteItem(selectedItem) {
@@ -96,7 +96,10 @@ export default defineStore('cartStore', {
         } else if (!response.data.success) {
           status.pushMessage({ title: message, style: 'danger' });
         }
-      });
+      })
+        .catch((error) => {
+          throw new Error(error);
+        });
     },
     deleteCart() {
       const api = `${process.env.VUE_APP_API}api/${process.env.VUE_APP_PATH}/carts`;
@@ -111,7 +114,10 @@ export default defineStore('cartStore', {
         } else if (!response.data.success) {
           status.pushMessage({ title: message, style: 'danger' });
         }
-      });
+      })
+        .catch((error) => {
+          throw new Error(error);
+        });
     },
     addCouponCode(couponCodeInput) {
       if (couponCodeInput === '') {
@@ -130,7 +136,10 @@ export default defineStore('cartStore', {
           } else if (!response.data.success) {
             this.couponMessage = response.data.message;
           }
-        });
+        })
+          .catch((error) => {
+            throw new Error(error);
+          });
       }
     },
     clearMessage() {
