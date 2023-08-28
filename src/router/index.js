@@ -1,70 +1,74 @@
 import { createRouter, createWebHashHistory } from 'vue-router';
 
 const routes = [
+  // {
+  //   path: '*',
+  //   redirect: '/',
+  // },
   {
     path: '/',
     name: 'home',
-    component: () => import('../views/HomePage.vue'),
+    component: () => import('../views/user-views/HomePage.vue'),
   },
   {
     path: '/login',
     name: 'login',
-    component: () => import('../views/LogIn.vue'),
+    component: () => import('../views/admin-views/LogIn.vue'),
   },
   {
     path: '/dashboard',
-    component: () => import('../views/DashboardView.vue'),
+    component: () => import('../views/admin-views/DashboardView.vue'),
     children: [
       {
         path: 'products',
-        component: () => import('../views/ProductsView.vue'),
+        component: () => import('../views/admin-views/ProductsView.vue'),
       },
       {
         path: 'orders',
-        component: () => import('../views/OrdersView.vue'),
+        component: () => import('../views/admin-views/OrdersView.vue'),
       },
       {
         path: 'coupons',
-        component: () => import('../views/CouponsView.vue'),
+        component: () => import('../views/admin-views/CouponsView.vue'),
       },
     ],
   },
   {
     path: '/user',
-    component: () => import('../views/UserboardView.vue'),
+    component: () => import('../views/user-views/UserboardView.vue'),
     children: [
       {
         path: 'cart',
-        component: () => import('../views/UserCart.vue'),
+        component: () => import('../views/user-views/UserCart.vue'),
       },
       {
         path: 'product/:productId',
-        component: () => import('../views/UserProduct.vue'),
+        component: () => import('../views/user-views/UserProduct.vue'),
       },
       {
         path: 'checkout/:orderId',
-        component: () => import('../views/UserCheckout.vue'),
+        component: () => import('../views/user-views/UserCheckout.vue'),
       },
       {
         path: 'products',
-        component: () => import('../views/UserProductsList.vue'),
+        component: () => import('../views/user-views/UserProductsList.vue'),
       },
       {
         path: 'orderform',
-        component: () => import('../views/UserOrderForm.vue'),
+        component: () => import('../views/user-views/UserOrderForm.vue'),
       },
       {
         path: 'ordercomplete',
         name: 'orderComplete',
-        component: () => import('../views/UserOrderComplete.vue'),
+        component: () => import('../views/user-views/UserOrderComplete.vue'),
       },
       {
         path: 'ordersearch',
-        component: () => import('../views/UserOrderSearch.vue'),
+        component: () => import('../views/user-views/UserOrderSearch.vue'),
       },
       {
         path: 'about',
-        component: () => import('../views/UserAboutUs.vue'),
+        component: () => import('../views/user-views/UserAboutUs.vue'),
       },
     ],
   },

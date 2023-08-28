@@ -23,19 +23,23 @@ export default defineStore('orderStore', {
     searchMessage: false,
   }),
   actions: {
-    async getOrder(orderId) {
+    getOrder(orderId) {
       this.orderId = orderId;
       const api = `${process.env.VUE_APP_API}api/${process.env.VUE_APP_PATH}/order/${orderId}`;
       status.isLoading = true;
-      const response = await axios.get(api);
-      status.isLoading = false;
-      if (response.data.success && response.data.order !== null) {
-        this.order = response.data.order;
-        this.checkCouponCode();
-        this.calcSubtotal();
-      } else if (response.data.order === null) {
-        this.searchMessage = true;
-      }
+      axios.get(api).then((response) => {
+        status.isLoading = false;
+        if (response.data.success && response.data.order !== null) {
+          this.order = response.data.order;
+          this.checkCouponCode();
+          this.calcSubtotal();
+        } else if (response.data.order === null) {
+          this.searchMessage = true;
+        }
+      })
+        .catch((error) => {
+          throw new Error(error);
+        });
     },
     checkCouponCode() {
       const item = this.order.products[Object.keys(this.order.products)[0]];
@@ -69,10 +73,13 @@ export default defineStore('orderStore', {
         } else if (!response.data.success) {
           status.pushMessage({ title: message, style: 'danger' });
         }
-      });
+      })
+        .catch((error) => {
+          throw new Error(error);
+        });
     },
     checkCreditNum(numLength) {
-      if (numLength < 16 && numLength >= 1) {
+      if (numLength !== 16 && numLength >= 1) {
         this.creditNumError = true;
       }
     },

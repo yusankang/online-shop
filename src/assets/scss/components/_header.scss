@@ -1,0 +1,28 @@
+.homepage-header {
+  background-image: url("/src/assets/images/layout-images/homepage-image-crop.jpg");
+}
+
+.products-header {
+  background-image: url("/src/assets/images/layout-images/products-header-cooker.jpg");
+}
+
+.about-header {
+  background-image: url("/src/assets/images/layout-images/about-header.jpg");
+}
+
+.header-img {
+  height: 480px;
+  background-size: cover;
+  background-position: center center;
+}
+
+.header-text {
+  color: #fff;
+  position: absolute;
+  z-index: 12;
+  top: 50%;
+  left: 0;
+  width: 100%;
+  text-align: center;
+  font-size: 32px;
+}
