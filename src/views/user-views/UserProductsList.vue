@@ -68,7 +68,7 @@
             </div>
           </div>
         </div>
-        <Pagination
+        <CustomPagination
           v-if="filteredProducts.length > 0"
           :products-num="filteredProducts.length"
           :product-category="category"
@@ -84,11 +84,11 @@ import { mapState, mapActions } from 'pinia';
 import productsStore from '@/stores/productsStore';
 import cartStore from '@/stores/cartStore';
 import statusStore from '@/stores/statusStore';
-import Pagination from '../../components/user-components/CustomPagination.vue';
+import CustomPagination from '../../components/user-components/CustomPagination.vue';
 
 export default {
   components: {
-    Pagination,
+    CustomPagination,
   },
   computed: {
     ...mapState(productsStore, [
