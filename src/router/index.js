@@ -1,10 +1,10 @@
 import { createRouter, createWebHashHistory } from 'vue-router';
 
 const routes = [
-  // {
-  //   path: '*',
-  //   redirect: '/',
-  // },
+  {
+    path: '/:catchAll(.*)',
+    redirect: '/',
+  },
   {
     path: '/',
     name: 'home',
