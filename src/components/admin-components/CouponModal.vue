@@ -1,4 +1,3 @@
-<!-- eslint-disable vuejs-accessibility/label-has-for -->
 <template>
   <div
     class="modal fade"
@@ -71,8 +70,8 @@
                   id="due-date"
                   name="到期日"
                   :placeholder="datePlaceholder"
-                  onfocus="type='date'"
-                  onblur="type='text'"
+                  @focus="type='date'"
+                  @blur="type='text'"
                   v-model="due_date"
                 />
               </div>

@@ -5,7 +5,9 @@ module.exports = defineConfig({
 });
 
 module.exports = {
-  publicPath: '/online-shop/',
+  publicPath: process.env.NODE_ENV === 'production'
+    ? '/online-shop/'
+    : '/',
   chainWebpack: (config) => {
     config.module
       .rule('vue')

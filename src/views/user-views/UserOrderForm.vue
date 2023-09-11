@@ -1,4 +1,3 @@
-<!-- eslint-disable vuejs-accessibility/label-has-for -->
 <template>
   <LoadingOverlay :active="isLoading" />
   <div class="container pt-5">
@@ -55,6 +54,7 @@
               name="電話"
               id="tel"
               placeholder="請輸入電話"
+              oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*)\./g, '$1');"
               :class="{ 'is-invalid': errors['電話'] }"
               :rules="isPhone"
               v-model="form.user.tel"

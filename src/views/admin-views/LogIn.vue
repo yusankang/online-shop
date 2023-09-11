@@ -1,4 +1,3 @@
-<!-- eslint-disable vuejs-accessibility/label-has-for -->
 <template>
   <LoadingOverlay :active="isLoading" />
   <div style="background-color: rgba(42, 62, 51, 0.8); min-height: 100vh">

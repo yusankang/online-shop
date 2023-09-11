@@ -1,4 +1,3 @@
-<!-- eslint-disable vuejs-accessibility/label-has-for -->
 <template>
   <LoadingOverlay :active="isLoading" />
   <div class="mb-3">
@@ -116,9 +115,9 @@
           minlength="3"
           v-model="customerCardInfo.cardCvv"
           placeholder="000"
+          oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*)\./g, '$1');"
           @blur="checkCvvNum(customerCardInfo.cardCvv.length)"
           @focus="clearErrorMessage()"
-          oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*)\./g, '$1');"
           :class="{ 'is-invalid': errors['CVV號碼'] }"
           rules="required"
         />
@@ -166,10 +165,10 @@
         placeholder="00000"
         maxlength="5"
         v-model="customerAccInfo.paymentAcc"
+        oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*)\./g, '$1');"
         @blur="checkAccNum(customerAccInfo.paymentAcc.length)"
         @focus="clearErrorMessage"
         autocomplete="off"
-        oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*)\./g, '$1');"
         :class="{ 'is-invalid': errors['帳號末五碼'] }"
         rules="required"
       />
@@ -219,7 +218,7 @@ export default {
     cardNumber() {
       this.customerCardInfo.realCardNumber = this.cardNumber.replace(/ /gi, '');
       const formattedNumber = this.customerCardInfo.realCardNumber.match(/.{1,4}/g);
-      if (this.customerCardInfo.realCardNumber !== '' && formattedNumber !== []) {
+      if (this.customerCardInfo.realCardNumber !== '') {
         this.cardNumber = formattedNumber.join(' ');
       }
     },

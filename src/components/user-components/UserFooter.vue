@@ -1,4 +1,3 @@
-<!-- eslint-disable vuejs-accessibility/anchor-has-content -->
 <template>
   <footer class="mt-auto">
     <div
@@ -7,13 +6,13 @@
     >
       <h6 class="text-white m-0" style="font-size: 14px">All rights reserved | Icon by Freepik</h6>
       <div>
-        <a href="#" class="me-3 hvr-grow text-white" @click.prevent>
+        <button class="me-3 hvr-grow text-white btn px-2 border-0" @click.prevent>
           <i class="bi bi-instagram"></i>
-        </a>
-        <a href="#" class="me-3 hvr-grow text-white" @click.prevent>
+        </button>
+        <button class="me-3 hvr-grow text-white btn px-2 border-0" @click.prevent>
           <i class="bi bi-facebook"></i>
-        </a>
-        <router-link to="/login" class="hvr-grow text-white">
+        </button>
+        <router-link to="/login" class="hvr-grow text-white px-2">
           <i class="bi bi-person-fill"></i>
         </router-link>
       </div>

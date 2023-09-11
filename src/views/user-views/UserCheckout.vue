@@ -80,7 +80,16 @@
                   <tr>
                     <td>
                       <p><strong>訂單號碼</strong></p>
-                      <p class="mb-2">{{ order.id }}</p>
+                      <div class="d-flex justify-content-between align-items-center">
+                        <p class="mb-2">{{ order.id }}</p>
+                        <button
+                          type="button"
+                          @click="copyOrderNumber"
+                          class="btn btn-warning mb-2"
+                        >
+                          複製訂單號碼
+                        </button>
+                      </div>
                     </td>
                   </tr>
                   <tr>
@@ -154,7 +163,7 @@ export default {
       'subTotal',
       'orderIsPaid',
     ]),
-    ...mapState(statusStore, ['isLoading']),
+    ...mapState(statusStore, ['isLoading', 'pushMessage']),
   },
   data() {
     return {
@@ -162,7 +171,7 @@ export default {
     };
   },
   methods: {
-    ...mapActions(orderStore, ['getOrder']),
+    ...mapActions(orderStore, ['getOrder', 'copyOrderNumber']),
     ...mapActions(cartStore, ['getCart']),
     ...mapActions(productsStore, ['scrollToTop']),
     isPaid() {
@@ -171,9 +180,9 @@ export default {
       }
     },
   },
-  async created() {
+  created() {
     const { orderId } = this.$route.params;
-    await this.getOrder(orderId);
+    this.getOrder(orderId);
     this.getCart();
     this.isPaid();
     this.scrollToTop();

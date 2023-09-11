@@ -1,6 +1,5 @@
 <template>
   <LoadingOverlay :active="isLoading" />
-  <!-- order total -->
   <div class="card-body border-0" v-if="cart.final_total > 0">
     <h5 class="text-center card-title mb-3">訂單價格</h5>
     <table class="w-100 mb-3">

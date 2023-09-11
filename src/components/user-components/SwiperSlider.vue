@@ -1,4 +1,3 @@
-<!-- eslint-disable vuejs-accessibility/anchor-has-content -->
 <template>
   <div class="swiper-wrapper">
     <swiper-container
@@ -35,9 +34,9 @@
                 </del>
                 <span class="fw-bold"> ${{ $filters.currency(item.price) }} </span>
               </p>
-              <a href="#" class="stretched-link" @click.prevent="getProduct(item.id)">
+              <button class="stretched-link btn" @click.prevent="getProduct(item.id)">
                 <i class="bi bi-arrow-right fs-4"></i>
-              </a>
+              </button>
             </div>
           </div>
         </div>

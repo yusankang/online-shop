@@ -27,16 +27,18 @@ export default defineStore('orderStore', {
       this.orderId = orderId;
       const api = `${process.env.VUE_APP_API}api/${process.env.VUE_APP_PATH}/order/${orderId}`;
       status.isLoading = true;
-      axios.get(api).then((response) => {
-        status.isLoading = false;
-        if (response.data.success && response.data.order !== null) {
-          this.order = response.data.order;
-          this.checkCouponCode();
-          this.calcSubtotal();
-        } else if (response.data.order === null) {
-          this.searchMessage = true;
-        }
-      })
+      axios
+        .get(api)
+        .then((response) => {
+          status.isLoading = false;
+          if (response.data.success && response.data.order !== null) {
+            this.order = response.data.order;
+            this.checkCouponCode();
+            this.calcSubtotal();
+          } else if (response.data.order === null) {
+            this.searchMessage = true;
+          }
+        })
         .catch((error) => {
           throw new Error(error);
         });
@@ -63,17 +65,19 @@ export default defineStore('orderStore', {
     payOrder() {
       const api = `${process.env.VUE_APP_API}api/${process.env.VUE_APP_PATH}/pay/${this.orderId}`;
       status.isLoading = true;
-      axios.post(api).then((response) => {
-        status.isLoading = false;
-        const { message } = response.data;
-        if (response.data.success) {
-          status.pushMessage({ title: message });
-          this.orderIsPaid = true;
-          this.router.push({ name: 'orderComplete' });
-        } else if (!response.data.success) {
-          status.pushMessage({ title: message, style: 'danger' });
-        }
-      })
+      axios
+        .post(api)
+        .then((response) => {
+          status.isLoading = false;
+          const { message } = response.data;
+          if (response.data.success) {
+            status.pushMessage({ title: message });
+            this.orderIsPaid = true;
+            this.router.push({ name: 'orderComplete' });
+          } else if (!response.data.success) {
+            status.pushMessage({ title: message, style: 'danger' });
+          }
+        })
         .catch((error) => {
           throw new Error(error);
         });
@@ -100,6 +104,19 @@ export default defineStore('orderStore', {
     },
     clearSearchMessage() {
       this.searchMessage = false;
+    },
+    async copyOrderNumber() {
+      const orderNumber = this.order.id;
+      try {
+        if (navigator?.clipboard?.writeText && orderNumber !== '') {
+          await navigator.clipboard.writeText(orderNumber);
+          status.pushMessage({ title: '訂單號碼複製成功' });
+        } else {
+          status.pushMessage({ title: '無法複製', style: 'danger' });
+        }
+      } catch (error) {
+        throw new Error(error);
+      }
     },
   },
 });
