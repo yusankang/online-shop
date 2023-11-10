@@ -1,5 +1,5 @@
-# 「野生廚房」示範線上商店網站
-「野生廚房」是一個虛構的線上商店示範網站，使用 Vue3、JavaScript、Html-CSS、Bootstrap、Pinia 等技術建構而成。
+# 「野生廚房」線上商店網站計畫
+「野生廚房」是一個虛構的線上商店網站計畫，使用 Vue3、JavaScript、Html-CSS、Bootstrap、Pinia 等技術建構而成。
 
 # 特點：
 - 商品可按照類別進行篩選。
@@ -17,8 +17,8 @@
 - 後台管理員可以新增、編輯和刪除商品和優惠卷。
 - 可以存取訂單詳細資訊，並編輯付款狀態。
 
-# Demo online shop website: 'Wilderness Kitchen'
-A demo website of the imaginary online shop 'Wilderness Kitchen', built using Vue3, JavaScript, Html-CSS, Bootstrap, Pinia.
+# Online shop website project: 'Wilderness Kitchen'
+A website project of the imaginary online shop 'Wilderness Kitchen', built using Vue3, JavaScript, Html-CSS, Bootstrap, Pinia.
 
 # Features:
 - Products can be filtered by category.
