@@ -1,5 +1,7 @@
-# 「野生廚房」線上商店網站計畫
-「野生廚房」是一個虛構的線上商店網站計畫，使用 Vue3、JavaScript、Html-CSS、Bootstrap、Pinia 等技術建構而成。
+https://yusankang.github.io/online-shop/#/
+
+# 「野生廚房」線上商店網站
+「野生廚房」是一個虛構的線上商店網站，使用 Vue3、JavaScript、Html-CSS、Bootstrap、Pinia 等技術建構而成。
 
 # 特點：
 - 商品可按照類別進行篩選。
